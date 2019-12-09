@@ -1,7 +1,17 @@
-# ad-assignment
- Advanced Development Assignment Work
-
 # Advanced Development Assignment
+Wessex Apps Ltd is looking to take on graduate computing students to help them move forward with their
+technological capabilities.
+They primarily use Python with the Flask framework for server-side development and their own bespoke
+mix of HTML, CSS and JavaScript for client-side work. They use a simple text editor to develop with and
+source code is stored on GitHub and Development is done on in house servers. Apps are deployed to
+dedicated hosted servers at their ISP, in some cases this is done using Travis CI to build and run tests
+before deployment.
+They develop, run and maintain a range of apps for clients including public facing websites, data analysis
+apps, company intranets, HR and payroll systems. Some of their client’s use MS Office 365 and have
+been asking for interoperability between their O365 apps and the developer’s apps.
+Wessex Apps Ltd is thinking about moving their apps over to cloud computing and wants applicants for
+the graduate positions to demonstrate their knowledge and skills in cloud centric technologies in one of
+two ways : THE BUILD!
 
 ## Instructions
 
