@@ -2,10 +2,5 @@
 
 {% block content %}
 <h1>User Login</h1>
-{% if globalArgs.user %}
-    <p>Welcome {{ globalArgs.user.email() }}!</p>
-    <p>You can <a href="{{ globalArgs.logout_url }}">sign out here</a>.</p>
-{% else %}
-    <p>Please <a href="{{ globalArgs.login_url }}">login here</a> to view your account details.</p>
-{% endif %}
+<p>Log in feature to be implemented.</p>
 {% endblock content %}
