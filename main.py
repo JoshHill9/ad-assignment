@@ -8,7 +8,7 @@ import models
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
-    
+
 args = {}
 
 def displayPage(pageName = "home"):

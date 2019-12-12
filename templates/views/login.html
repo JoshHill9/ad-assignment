@@ -2,9 +2,10 @@
 
 {% block content %}
     <h1>User Login</h1>
-    {% if args["user"].found %}
-        <h2>User Found!</h2>
+    {% if args["user"]["logged_in"] == False %}
+        <h2>Welcome, please <a href='{{ args["user"]["login_url"] }}'>login here</a> to view your account.</h2>
     {% else %}
-        <h2>User Not Found!</h2>
+      <h2>Welcome {{ args["user"]["userObj"].email() }}</h2>
+      <p>You can <a href="{{ args['user']['logout_url'] }}">logout here</a>.</p>
     {% endif %}
 {% endblock content %}
