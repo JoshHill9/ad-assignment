@@ -1,6 +1,9 @@
 from flask import Flask, render_template
 from google.appengine.api import users
 
+import sys
+sys.path.append('lib')
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
     
