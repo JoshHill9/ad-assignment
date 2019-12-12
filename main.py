@@ -1,19 +1,40 @@
 from flask import Flask, render_template
 from google.appengine.api import users
 
+import sys
+sys.path.append('lib')
+
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "TestKey"
+    
+args = {}
 
-@app.route('/')
+def displayPage(pageName = "home"):
+    if pageName:
+        return render_template("views/" + pageName + ".html", args=args)
+
+@app.route("/")
 def home():
-    return render_template("views/home.html", active="home")
+    args["active"] = "home"
+    return displayPage("home")
 
-@app.route('/about')
+@app.route("/about")
 def about():
-    return render_template("views/about.html", title="About", active="about")
+    args["title"] = "About"
+    args["active"] = "about"
+    return displayPage("about")
 
-@app.route('/login')
+@app.route("/login")
 def login():
-    return render_template("views/login.html", active="login")
+    args["active"] = "login"
+    args["title"] = "Login"
+    return displayPage("login")
+
+@app.route("/register")
+def register():
+    args["active"] = "register"
+    args["title"] = "Register"
+    return displayPage("register")
 
 if __name__ == "__main__":
     app.run(debug=True)
