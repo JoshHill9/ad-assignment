@@ -4,6 +4,8 @@ from google.appengine.api import users
 import sys
 sys.path.append('lib')
 
+import models
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
     
@@ -28,6 +30,7 @@ def about():
 def login():
     args["active"] = "login"
     args["title"] = "Login"
+    args["user"] = models.isUserLoggedIn()
     return displayPage("login")
 
 @app.route("/register")

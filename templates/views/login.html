@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>User Login</h1>
-<p>Log in feature to be implemented.</p>
+    <h1>User Login</h1>
+    {% if args["user"].found %}
+        <h2>User Found!</h2>
+    {% else %}
+        <h2>User Not Found!</h2>
+    {% endif %}
 {% endblock content %}
