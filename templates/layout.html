@@ -20,12 +20,11 @@
         <script src="https://kit.fontawesome.com/2a0216e05b.js" crossorigin="anonymous"></script>
 
         <!-- Implement 'title' based on argument passed by Flask routing -->
-        {% if "title" in args %}
-            <title>To-Do Creator - {{ args["title"] }}</title>
+        {% if args.get('title') %}
+            <title>To-Do Creator - {{ args.get('title') }}</title>
         {% else %}
             <title>To-Do Creator</title>
         {% endif %}
-
     </head>
 
     <body>
@@ -45,20 +44,14 @@
                 </ul>
             </div>
 
+
             <ul class="nav navbar-nav navbar-right">
-              {% if not args["user"]["logged_in"] %}
                 <li class="nav-item pr-1 pl-1">
                   <a href="/register"><i class="far fa-address-book icon-2x pr-1"></i> Register</a>
                 </li>
-                <li class="nav-item pr-1 pl-1 {% if args.get('active') == 'login' %}active{% endif %}">
+                <li class="nav-item pr-1 pl-1">
                   <a href="/login"><i class="fas fa-male pr-1"></i> Login</a>
                 </li>
-              {% else %}
-                <li class="nav-item pr-1 pl-1">
-                  <i class="far fa-user icon-2x"></i>
-                  <a href="/account">{{ args["user"]["userObj"].nickname() }}</a>
-                </li>
-              {% endif %}
             </ul>
 
 

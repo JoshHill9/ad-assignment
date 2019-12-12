@@ -1,11 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>User Login</h1>
-    {% if args["user"]["logged_in"] == False %}
-        <h2>Welcome, please <a href='{{ args["user"]["login_url"] }}'>login here</a> to view your account.</h2>
-    {% else %}
-      <h2>Welcome {{ args["user"]["userObj"].email() }}</h2>
-      <p>You can <a href="{{ args['user']['logout_url'] }}">logout here</a>.</p>
-    {% endif %}
+  <div class="container mt-5">
+    <form class="form-horizontal" method="POST" action="/login">
+      <h2>Please login here:</h2>
+      {% for field in args["loginForm"] %}
+        <div class="form-group">
+          {{ field.label(class="control-label") }}:
+          {{ field(class="form-control") }}
+        </div>
+      {% endfor %}
+      <input type="submit" value="Log In" class="btn btn-info" />
+    </form>
+  </div>
 {% endblock content %}
