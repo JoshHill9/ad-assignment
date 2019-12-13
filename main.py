@@ -6,6 +6,7 @@ sys.path.append('lib')
 sys.path.append('models')
 
 import User
+import forms
 from wtforms_appengine.ndb import model_form
 
 app = Flask(__name__)
@@ -55,6 +56,7 @@ def login():
 def register():
     args["active"] = "register"
     args["title"] = "Register"
+    args["form"] = forms.RegistrationForm()
     return displayPage('register')
 
 @app.route('/account')
