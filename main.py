@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from google.appengine.api import users
+from forms import RegistrationForm
 
 import sys
 sys.path.append('lib')
@@ -8,7 +9,7 @@ import models
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
-    
+
 args = {}
 
 def displayPage(pageName = "home"):
@@ -22,8 +23,8 @@ def home():
 
 @app.route("/about")
 def about():
-    args["title"] = "About"
     args["active"] = "about"
+    args["title"] = "About"
     return displayPage("about")
 
 @app.route("/login")
@@ -37,6 +38,9 @@ def login():
 def register():
     args["active"] = "register"
     args["title"] = "Register"
+
+    args["form"] = RegistrationForm()
+
     return displayPage("register")
 
 if __name__ == "__main__":
