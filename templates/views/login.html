@@ -1,6 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>User Login</h1>
-<p>Log in feature to be implemented.</p>
+  <div class="container mt-5">
+    <form class="form-horizontal" method="POST" action="/login">
+      <h2>Please login here:</h2>
+      {% for field in args["loginForm"] %}
+        <div class="form-group">
+          {{ field.label(class="control-label") }}:
+          {{ field(class="form-control") }}
+        </div>
+      {% endfor %}
+      <input type="submit" value="Log In" class="btn btn-info" />
+    </form>
+  </div>
 {% endblock content %}
