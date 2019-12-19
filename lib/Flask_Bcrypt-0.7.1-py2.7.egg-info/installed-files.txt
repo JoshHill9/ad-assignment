@@ -1,0 +1,9 @@
+..\flask_bcrypt.py
+..\flask_bcrypt.pyc
+PKG-INFO
+SOURCES.txt
+dependency_links.txt
+not-zip-safe
+requires.txt
+top_level.txt
+version_info.json

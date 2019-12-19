@@ -1,16 +1,67 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="content-section">
-    <form method="POST" action="">
-        {{ args["form"].hidden_tag() }}
-        <fieldset class="form-group">
-          <legend class="border-bottom">Register Now!</legend>
-          <div class="form-group">
-            {{ args["form"].username.label(class="form-control-label") }}
-            {{ args["form"].username(class="form-control form-control-lg") }}
+  <div class="container mt-5">
+    <form class="form-horizontal" method="POST" action="/register">
+      {{ args["registerForm"].csrf_token }}
+      <legend class="border-bottom pb-1">Registration Form:</legend>
+      <div class="form-group">
+        {{ args["registerForm"].email.label }}
+        {% if args["registerForm"].email.errors %}
+        {{ args["registerForm"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
+          <div class="invalid-feedback">
+            {% for error in args["registerForm"].email.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
           </div>
-        </fieldset>
+        {% else %}
+          {{ args["registerForm"].email(class="form-control", placeholder="Enter your email...") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ args["registerForm"].username.label }}
+        {% if args["registerForm"].username.errors %}
+        {{ args["registerForm"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
+          <div class="invalid-feedback">
+            {% for error in args["registerForm"].username.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ args["registerForm"].username(class="form-control", placeholder="Enter your username...") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ args["registerForm"].password.label }}
+        {% if args["registerForm"].password.errors %}
+        {{ args["registerForm"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
+          <div class="invalid-feedback">
+            {% for error in args["registerForm"].password.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ args["registerForm"].password(class="form-control", placeholder="Enter your password...") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ args["registerForm"].confirmPassword.label }}
+        {% if args["registerForm"].confirmPassword.errors %}
+        {{ args["registerForm"].confirmPassword(class="form-control is-invalid", placeholder="Confirm your password...") }}
+          <div class="invalid-feedback">
+            {% for error in args["registerForm"].confirmPassword.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ args["registerForm"].confirmPassword(class="form-control", placeholder="Confirm your password...") }}
+        {% endif %}
+      </div>
+      {{ args["registerForm"].submit(class="btn btn-info") }}
     </form>
+    <span class="text-muted">
+      Already have an account?
+      <a href="{{ url_for('login') }}">Login Here!</a>
+    </span>
   </div>
 {% endblock content %}
