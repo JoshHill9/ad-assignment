@@ -2,15 +2,47 @@
 
 {% block content %}
   <div class="container mt-5">
-    <form class="form-horizontal" method="POST" action="/login">
-      <h2>Please login here:</h2>
-      {% for field in args["loginForm"] %}
+    {% if args.get("user") == None %}
+      <form class="form-horizontal" method="POST" action="/login">
+        {{ args["loginForm"].csrf_token }}
+        <legend class="border-bottom pb-1">Please login here:</legend>
         <div class="form-group">
-          {{ field.label(class="control-label") }}:
-          {{ field(class="form-control") }}
+          {{ args["loginForm"].username.label }}
+          {% if args["loginForm"].username.errors %}
+          {{ args["loginForm"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
+            <div class="invalid-feedback">
+              {% for error in args["loginForm"].username.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ args["loginForm"].username(class="form-control", placeholder="Enter your username...") }}
+          {% endif %}
         </div>
-      {% endfor %}
-      <input type="submit" value="Log In" class="btn btn-info" />
-    </form>
+        <div class="form-group">
+          {{ args["loginForm"].password.label }}
+          {% if args["loginForm"].password.errors %}
+          {{ args["loginForm"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
+            <div class="invalid-feedback">
+              {% for error in args["loginForm"].password.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ args["loginForm"].password(class="form-control", placeholder="Enter your password...") }}
+          {% endif %}
+        </div>
+        {{ args["loginForm"].login(class="btn btn-info") }}
+      </form>
+      <a href="{{ args['user_glogin'] }}">Login w/ Google</a>
+      <br>
+      <span class="text-muted">
+        Need an account?
+        <a href="{{ url_for('register') }}">Register Here!</a>
+      </span>
+    {% else %}
+      <h2>Welcome User!</h2>
+      <a href="{{ args['user_glogout'] }}">Logout w/ Google</a>
+    {% endif %}
   </div>
 {% endblock content %}

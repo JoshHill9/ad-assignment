@@ -8,6 +8,20 @@ class User(ndb.Model):
     password = ndb.StringProperty()
     join_date = ndb.DateProperty(auto_now_add=True)
 
+def findUser(username=None):
+
+    result = {}
+    
+    userKey = ndb.Key('User', username)
+    foundUser = userKey.get()
+    result = {'user': foundUser, 'new': False}
+
+    if not foundUser:
+        foundUser = User(id=username)
+        result = {'user': foundUser, 'new': True}
+
+    return result
+
 def getCurrentUser():
     user = users.get_current_user()
     if user:
