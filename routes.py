@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.append('lib')
 sys.path.append('models')
 sys.path.append('controllers')
@@ -6,6 +7,7 @@ sys.path.append('controllers')
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from google.appengine.api import users
 from forms import RegistrationForm, LoginForm
+import hashlib
 
 import UserController
 
@@ -13,6 +15,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
 
 args = {}
+state = hashlib.sha256(os.urandom(1024)).hexdigest()
+APPLICATION_NAME = "todo-ad-assignment-id"
+CLIENT_ID = "701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com"
 
 def displayPage(pageName = "home", loginRequired = True):
     if loginRequired:
@@ -81,4 +86,7 @@ def todos():
     return displayPage('todos', False)
 
 if __name__ == "__main__":
+    args["CLIENT_ID"] = CLIENT_ID
+    args["APPLICATION_NAME"] = APPLICATION_NAME
+    args["state"] = state
     app.run(debug=True)
