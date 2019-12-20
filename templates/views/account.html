@@ -2,6 +2,6 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h3>Hi {{ args["user"] }}! Welcome to your account page.</h3>
+    <h3>Hi {{ session["user"] }}! Welcome to your account page.</h3>
   </div>
 {% endblock content %}

@@ -17,7 +17,7 @@ def findUserByEmail(email=None):
     query = User.query().filter(User.email == email)
     return query.get()
 
-def createNewUser(username=None):
+def initUserEntityKey(username=None):
     if username:
         user = User(id=username)
         user.joined_from = "website"
