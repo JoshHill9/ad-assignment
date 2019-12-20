@@ -42,10 +42,22 @@
           <span class="align-middle">OR</span>
         </h1>
       </div>
-      <div class="col bg-white p-4">
+      <div class="col bg-white p-4 align-self-start">
         <form class="form-horizontal" method="GET" action="">
           <legend class="border-bottom pb-1">Login with Google:</legend>
-          <div class="g-signin2 mt-5" data-onsuccess="onSignIn"></div>
+          <div class="row">
+            <div class="col"></div>
+            <div class="col">
+              <div class="g-signin2 mt-5 mb-5" data-onsuccess="onSignIn"></div>
+              <script>
+                  function onSignIn(gUser) {
+                    var profile = gUser.getBasicProfile();
+                    console.log("GUser Email:" + profile.getEmail());
+                  }
+              </script>
+            </div>
+            <div class="col"></div>
+          </div>
         </form>
       </div>
     </div>
