@@ -1,4 +1,4 @@
-application: wessex-todo
+application: todo
 version: v1
 runtime: python27
 api_version: 1
@@ -6,7 +6,7 @@ threadsafe: yes
 
 handlers:
 - url: .*
-  script: main.app
+  script: routes.app
 
 libraries:
 - name: flask
