@@ -2,39 +2,52 @@
 
 {% block content %}
   <div class="container mt-5">
-    <form class="form-horizontal" method="POST" action="{{ url_for('login') }}">
-      {{ args["loginForm"].csrf_token }}
-      <legend class="border-bottom pb-1">Please login here:</legend>
-      <div class="form-group">
-        {{ args["loginForm"].username.label }}
-        {% if args["loginForm"].username.errors %}
-          {{ args["loginForm"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
-          <div class="invalid-feedback">
-            {% for error in args["loginForm"].username.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+    <div class="row">
+      <div class="col bg-white p-4">
+        <form class="form-horizontal" method="POST" action="{{ url_for('login') }}">
+          {{ args["loginForm"].csrf_token }}
+          <legend class="border-bottom pb-1">To-Do List Login:</legend>
+          <div class="form-group">
+            {{ args["loginForm"].username.label }}
+            {% if args["loginForm"].username.errors %}
+              {{ args["loginForm"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
+              <div class="invalid-feedback">
+                  {% for error in args["loginForm"].username.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+            {% else %}
+              {{ args["loginForm"].username(class="form-control", placeholder="Enter your username...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["loginForm"].username(class="form-control", placeholder="Enter your username...") }}
-        {% endif %}
-      </div>
-      <div class="form-group">
-        {{ args["loginForm"].password.label }}
-        {% if args["loginForm"].password.errors %}
-          {{ args["loginForm"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
-          <div class="invalid-feedback">
-            {% for error in args["loginForm"].password.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+          <div class="form-group">
+            {{ args["loginForm"].password.label }}
+            {% if args["loginForm"].password.errors %}
+              {{ args["loginForm"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
+              <div class="invalid-feedback">
+                {% for error in args["loginForm"].password.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ args["loginForm"].password(class="form-control", placeholder="Enter your password...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["loginForm"].password(class="form-control", placeholder="Enter your password...") }}
-        {% endif %}
+          {{ args["loginForm"].login(class="btn btn-dark") }}
+        </form>
+        <br><span class="text-muted"><strong>Don't want</strong> to sign in with <strong>Google</strong>?<br><a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a></span>
       </div>
-      {{ args["loginForm"].login(class="btn btn-dark") }}
-    </form>
-    <a href="{{ args['user_glogin'] }}">Login w/ Google</a>
-    <br>
-    <span class="text-muted">Need an account?<a href="{{ url_for('register') }}">Register Here!</a></span>
+      <div class="col">
+        <h1 class="text-center">
+          <span class="align-middle">OR</span>
+        </h1>
+      </div>
+      <div class="col bg-white p-4">
+        <form class="form-horizontal" method="GET" action="">
+          <legend class="border-bottom pb-1">Login with Google:</legend>
+          <div class="g-signin2 mt-5" data-onsuccess="onSignIn"></div>
+        </form>
+      </div>
+    </div>
   </div>
 {% endblock content %}

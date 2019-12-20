@@ -19,6 +19,10 @@
         <!-- Custom CSS on Bootstrap Classes -->
         <link rel="stylesheet" href="static/bootstrap.custom.css">
 
+        <!-- Google Sign In Support -->
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-client_id" content="701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com">
+
         <!-- Implement 'title' based on argument passed by Flask routing -->
         {% if args.get('title') %}
             <title>To-Do Creator - {{ args.get('title') }}</title>
