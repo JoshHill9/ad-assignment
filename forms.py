@@ -1,9 +1,12 @@
 import sys
 sys.path.append('lib')
+sys.path.append('models')
 
 from flask_wtf import FlaskForm, csrf
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+
+import User
 
 class RegistrationForm(FlaskForm):
 
@@ -14,6 +17,15 @@ class RegistrationForm(FlaskForm):
 
     submit = SubmitField("Register")
 
+    def validate_username(self, username):
+        if User.findUserByName(username.data):
+            raise ValidationError("Sorry, this username is already in use! Please select a new one.")
+
+    def validate_email(self, email):
+        if User.findUserByEmail(email.data):
+            raise ValidationError("This email address is already in used. Please login instead.")
+
+
 
 class LoginForm(FlaskForm):
 
@@ -21,3 +33,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
 
     login = SubmitField("Login")
+
+    def validate_username(self, username):
+        if not User.findUserByName(username.data):
+            raise ValidationError("This account does not exists. Please re-enter an existing account username.")

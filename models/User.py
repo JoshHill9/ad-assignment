@@ -7,20 +7,22 @@ class User(ndb.Model):
     email = ndb.StringProperty()
     password = ndb.StringProperty()
     join_date = ndb.DateProperty(auto_now_add=True)
+    joined_from = ndb.StringProperty()
 
-def findUser(username=None):
-
-    result = {}
-    
+def findUserByName(username=None):
     userKey = ndb.Key('User', username)
-    foundUser = userKey.get()
-    result = {'user': foundUser, 'new': False}
+    return userKey.get()
 
-    if not foundUser:
-        foundUser = User(id=username)
-        result = {'user': foundUser, 'new': True}
+def findUserByEmail(email=None):
+    query = User.query().filter(User.email == email)
+    return query.get()
 
-    return result
+def createNewUser(username=None):
+    if username:
+        user = User(id=username)
+        user.joined_from = "website"
+        return user
+    return None
 
 def getCurrentUser():
     user = users.get_current_user()

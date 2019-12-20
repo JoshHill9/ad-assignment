@@ -42,7 +42,6 @@ def home():
 @app.route("/about")
 def about():
     args["title"] = "About"
-
     return displayPage("about")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -50,55 +49,38 @@ def login():
     args["title"] = "Login"
     args["user_glogin"] = User.getUserLoginURL()
     args["user_glogout"] = User.getUserLogoutURL()
-
     args["loginForm"] = LoginForm()
-
     if args["loginForm"].validate_on_submit():
-
         username = args["loginForm"].username.data
-        loginUser = User.findUser(username)
-        if loginUser["new"] == True:
-            flash("Sorry, this account does not exist", 'danger')
+        loginUser = User.findUserByName(username)
+        checkPw = bcrypt.hashpw(args["loginForm"].password.data, loginUser.password)
+        if checkPw == loginUser.password:
+            args["user"] = loginUser.username
+            args["session_start_time"] = datetime.now()
+            args["session_end_time"] = args["session_start_time"] + timedelta(minutes=45)
+            flash("Successfully logged in as " + username + "!", 'success')
+            return redirect(url_for('account')) if not request.args.get('next') else redirect(url_for(request.args["next"]))
         else:
-            loginUser = loginUser["user"]
-            checkPw = bcrypt.hashpw(args["loginForm"].password.data, loginUser.password)
-            if checkPw == loginUser.password:
-                args["user"] = loginUser.username
-                args["session_start_time"] = datetime.now()
-                args["session_end_time"] = args["session_start_time"] + timedelta(minutes=45)
-                flash("Successfully logged in as " + username + "!", 'success')
-                return redirect(url_for('account'))
-            else:
-                flash("Sorry, the login information provided was not correct", 'danger')
-
+            flash("Sorry, the login information provided was not correct", 'danger')
     return displayPage("login", False)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     args["title"] = "Register"
-
     args["registerForm"] = RegistrationForm()
-
     if args["registerForm"].validate_on_submit():
         name = args["registerForm"].username.data
-        userExists = User.findUser(name)
-        if userExists["new"] == False:
-            flash("Sorry, the username [" + name + "] is already taken!", 'danger')
-        else:
-            newAcc = userExists["user"]
-            try:
-                newAcc.username = args["registerForm"].username.data
-                newAcc.email = args["registerForm"].email.data
-
-                hP = bcrypt.hashpw(args["registerForm"].password.data, bcrypt.gensalt(6))
-                newAcc.password = hP
-
-                newAcc.put()
-
-                flash("Your account [" + name + "] has been created!", 'success')
-            except ValueError:
-                pass
+        newAcc = User.createNewUser(name)
+        try:
+            newAcc.username = args["registerForm"].username.data
+            newAcc.email = args["registerForm"].email.data
+            hP = bcrypt.hashpw(args["registerForm"].password.data, bcrypt.gensalt(6))
+            newAcc.password = hP
+            newAcc.put()
+            flash("Your account [" + name + "] has been created!", 'success')
+        except ValueError:
+            pass
     return displayPage("register", False)
 
 @app.route("/account")
