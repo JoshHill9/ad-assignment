@@ -89,4 +89,4 @@ if __name__ == "__main__":
     args["CLIENT_ID"] = CLIENT_ID
     args["APPLICATION_NAME"] = APPLICATION_NAME
     args["state"] = state
-    app.run(debug=True)
+    app.run()
