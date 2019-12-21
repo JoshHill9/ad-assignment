@@ -3,7 +3,7 @@
 {% block content %}
   <div class="container mt-5">
     <div class="row">
-      <div class="col bg-white p-4">
+      <div class="col bg-white p-4 col-12">
         <form class="form-horizontal" method="POST" action="{{ url_for('login') }}">
           {{ args["loginForm"].csrf_token }}
           <legend class="border-bottom pb-1">To-Do List Login:</legend>
@@ -35,31 +35,37 @@
           </div>
           {{ args["loginForm"].login(class="btn btn-dark") }}
         </form>
-        <br><span class="text-muted"><strong>Don't want</strong> to sign in with <strong>Google</strong>?<br><a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a></span>
-      </div>
-      <div class="col">
-        <h1 class="text-center">
-          <span class="align-middle">OR</span>
-        </h1>
-      </div>
-      <div class="col bg-white p-4 align-self-start">
-        <form class="form-horizontal" method="GET" action="">
-          <legend class="border-bottom pb-1">Login with Google:</legend>
-          <div class="row">
-            <div class="col"></div>
-            <div class="col">
-              <div class="g-signin2 mt-5 mb-5" data-onsuccess="onSignIn"></div>
-              <script>
-                  function onSignIn(gUser) {
-                    var profile = gUser.getBasicProfile();
-                    console.log("GUser Email:" + profile.getEmail());
-                  }
-              </script>
-            </div>
-            <div class="col"></div>
+        <form class="form-horizontal">
+          <legend class="border-bottom mt-4">Google Login:</legend>
+          <div class="col col-12 text-center">
+            <div class="g-signin2 mt-2" data-onsuccess="onSignIn"></div>
+            <a href="#" class="btn btn-danger mb-2" onclick="signOut();">Sign Out</a>
           </div>
         </form>
+        <div class="text-center col-12">
+          <strong>Don't want</strong> to sign in with <strong>Google</strong>?<br>
+          <a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    function onSignIn(gUser) {
+      var profile = gUser.getBasicProfile();
+      var id_token = gUser.getAuthResponse().id_token;
+
+      var req = XMLHttpRequest();
+      req.open("POST", {{ url_for("glogin") }}, true);
+      req.setRequestHeader("Content-Type", "application/json");
+      var data = {"id_token": id_token, "email": profile.getEmail(), "first_name": profile.getGivenName(), "last_name": profile.getFamilyName()}
+      req.send(JSON.stringify(data));
+    }
+
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function() {
+        console.log('User signed out.');
+      });
+    }
+  </script>
 {% endblock content %}

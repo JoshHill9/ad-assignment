@@ -28,11 +28,12 @@ def checkUserPwd(username, pwd):
             return True
     return False
 
-def createNewUser(userId, username, email, pwd):
+def createNewUser(userId, username, email, pwd, joined_from):
     newUser = User.initUserEntityKey(userId)
     newUser.username = username
     newUser.email = email
     newUser.password = hashUserPwd(pwd)
+    user.joined_from = joined_from
     try:
         newUser.put()
         return True

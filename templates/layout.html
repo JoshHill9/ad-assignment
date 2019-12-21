@@ -22,6 +22,7 @@
         <!-- Google Sign In Support -->
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <meta name="google-signin-client_id" content="701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com">
+        <meta name="google-signin-scope" content="profile email">
 
         <!-- Implement 'title' based on argument passed by Flask routing -->
         {% if args.get('title') %}
@@ -47,7 +48,7 @@
                       <a class="nav-link pl-3" href="{{ url_for('about') }}"><i class="fas fa-info"></i> About</a>
                   </li>
                   {% if session.get("user") %}
-                    <li class="nav-item {% if args.get('active' == 'todos') %}active{% endif %}">
+                    <li class="nav-item {% if args.get('active') == 'todos' %}active{% endif %}">
                       <a class="nav-link pl-3" href="{{ url_for('todos') }}">My To-DOs</a>
                     </li>
                   {% endif %}
@@ -83,14 +84,14 @@
           {% if messages %}
             {% for category, message in messages %}
              <div class="row">
-               <div class="col"></div>
-               <div class="col">
+               <div class="col col-4"></div>
+               <div class="col col-4">
                  <div class="alert alert-{{ category }} alert-dismissible fade show container text-center mt-3" role="alert">
                    {{ message }}
                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                  </div>
                </div>
-               <div class="col"></div>
+               <div class="col col-4"></div>
              </div>
             {% endfor %}
           {% endif %}

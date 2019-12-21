@@ -20,7 +20,6 @@ def findUserByEmail(email=None):
 def initUserEntityKey(username=None):
     if username:
         user = User(id=username)
-        user.joined_from = "website"
         return user
     return None
 
