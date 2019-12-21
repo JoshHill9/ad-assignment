@@ -57,8 +57,9 @@ def login():
 
 @app.route("/glogin", methods=["POST"])
 def glogin():
-    if request.get("id_token"):
-        if OAuthController.verifyToken(request["id_token"]):
+    reqData = request.data
+    if reqData.get("id_token"):
+        if OAuthController.verifyToken(reqData["id_token"]):
             flash("Google Account Authorized!!!", "success")
             return redirect(url_for('login'))
         flash("Google Account Not Authorized!", "danger")

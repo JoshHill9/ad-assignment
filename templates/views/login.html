@@ -38,8 +38,27 @@
         <form class="form-horizontal">
           <legend class="border-bottom mt-4">Google Login:</legend>
           <div class="col col-12 text-center">
+            <script>
+              function onSignIn(gUser) {
+                var profile = gUser.getBasicProfile();
+                var id_token = gUser.getAuthResponse().id_token;
+                var req = new XMLHttpRequest();
+                req.open("POST", "https://ad-assignment-s4907869.appspot.com/glogin");
+                req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                //var data = {"id_token": id_token, "email": profile.getEmail(), "first_name": profile.getGivenName(), "last_name": profile.getFamilyName()};
+                req.send("id_token=" + id_token);
+              }
+            </script>
             <div class="g-signin2 mt-2" data-onsuccess="onSignIn"></div>
-            <a href="#" class="btn btn-danger mb-2" onclick="signOut();">Sign Out</a>
+            <a href="#" onclick="signOut();">Sign Out</a>
+            <script>
+              function signOut() {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function() {
+                  console.log('User signed out.');
+                });
+              }
+            </script>
           </div>
         </form>
         <div class="text-center col-12">
@@ -49,23 +68,4 @@
       </div>
     </div>
   </div>
-  <script>
-    function onSignIn(gUser) {
-      var profile = gUser.getBasicProfile();
-      var id_token = gUser.getAuthResponse().id_token;
-
-      var req = XMLHttpRequest();
-      req.open("POST", {{ url_for("glogin") }}, true);
-      req.setRequestHeader("Content-Type", "application/json");
-      var data = {"id_token": id_token, "email": profile.getEmail(), "first_name": profile.getGivenName(), "last_name": profile.getFamilyName()}
-      req.send(JSON.stringify(data));
-    }
-
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function() {
-        console.log('User signed out.');
-      });
-    }
-  </script>
 {% endblock content %}
