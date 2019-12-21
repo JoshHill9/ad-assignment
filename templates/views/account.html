@@ -2,6 +2,7 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h3>Hi {{ session["user"] }}! Welcome to your account page.</h3>
+      <h3>Hi {% if session["user_type"] == "google_user" %}[Google User] {% endif %}{{ session["user"] }}!</h3>
+      <h3>Welcome to your account page.</h3>
   </div>
 {% endblock content %}

@@ -36,35 +36,15 @@
           {{ args["loginForm"].login(class="btn btn-dark") }}
         </form>
         <form class="form-horizontal">
+
           <legend class="border-bottom mt-4">Google Login:</legend>
-          <div class="col col-12 text-center">
-            <script>
-              function onSignIn(gUser) {
-                var profile = gUser.getBasicProfile();
-                var id_token = gUser.getAuthResponse().id_token;
-                var req = new XMLHttpRequest();
-                req.open("POST", "https://ad-assignment-s4907869.appspot.com/glogin");
-                req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                //var data = {"id_token": id_token, "email": profile.getEmail(), "first_name": profile.getGivenName(), "last_name": profile.getFamilyName()};
-                req.send("id_token=" + id_token);
-              }
-            </script>
-            <div class="g-signin2 mt-2" data-onsuccess="onSignIn"></div>
-            <a href="#" onclick="signOut();">Sign Out</a>
-            <script>
-              function signOut() {
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function() {
-                  console.log('User signed out.');
-                });
-              }
-            </script>
-          </div>
+          <div class="g-signin2 mt-2" data-onsuccess="onSignIn"></div>
+
         </form>
-        <div class="text-center col-12">
-          <strong>Don't want</strong> to sign in with <strong>Google</strong>?<br>
-          <a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a>
-        </div>
+      </div>
+      <div class="text-center col-12 mt-4">
+        <strong>Don't want</strong> to sign in with <strong>Google</strong>?<br>
+        <a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a>
       </div>
     </div>
   </div>

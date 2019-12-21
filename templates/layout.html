@@ -23,6 +23,47 @@
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <meta name="google-signin-client_id" content="701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com">
         <meta name="google-signin-scope" content="profile email">
+        <script>
+
+          // Google Sign Out Method
+          function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+              console.log('User signed out.');
+            });
+          }
+
+          // Google Sign In Method
+          // Causes TypeError: expected httplib.Message, got <type 'instance'>
+          // https://github.com/urllib3/urllib3/issues/1501
+          // Seems to be due to an App Engine & urllib interoperability issues.
+          // Not handling error at this time, since functionality is working
+          function onSignIn(gUser) {
+            var profile = gUser.getBasicProfile();
+            var id_token = gUser.getAuthResponse().id_token;
+
+            // Prevent auto login (without clicking button)
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.disconnect();
+
+            var data = JSON.stringify({"id_token": id_token});
+
+            var req = new XMLHttpRequest();
+            req.open("POST", "/google_login", true);
+            req.setRequestHeader("Content-Type", "application/json");
+            req.onreadystatechange = function() {
+              if (req.readyState === 4) {
+                var response = JSON.parse(req.responseText);
+                if (req.status === 200 && response.success == true) {
+                  window.location.href = "/account";
+                } else {
+                  console.log("Not done or failed");
+                }
+              }
+            }
+            req.send(data);
+          }
+        </script>
 
         <!-- Implement 'title' based on argument passed by Flask routing -->
         {% if args.get('title') %}
@@ -62,7 +103,11 @@
                   <a href="{{ url_for('account') }}" class="nav-link pl-3"><i class="fas fa-store-alt"></i> My Account [ {{ session["user"] }} ]</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ url_for('logout') }}" class="nav-link pl-3"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                  {% if session.get("user_type") == "website_user" %}
+                    <a href="{{ url_for('logout') }}" class="nav-link pl-3"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                  {% elif session.get("user_type") == "google_user" %}
+                    <a href="{{ url_for('logout') }}" class="nav-link pl-3" onclick="signOut();"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                  {% endif %}
                 </li>
               {% else %}
                 <li class="nav-item {% if args.get('active') == 'register' %}active{% endif %}">

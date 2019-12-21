@@ -1,5 +1,4 @@
 import sys
-import os
 sys.path.append('lib')
 sys.path.append('models')
 sys.path.append('controllers')
@@ -7,7 +6,6 @@ sys.path.append('controllers')
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from google.appengine.api import users
 from forms import RegistrationForm, LoginForm
-import hashlib
 
 import UserController, OAuthController
 
@@ -55,15 +53,17 @@ def login():
         flash("Sorry, the login information provided was not correct", 'danger')
     return displayPage("login", False)
 
-@app.route("/glogin", methods=["POST"])
-def glogin():
-    reqData = request.data
-    if reqData.get("id_token"):
-        if OAuthController.verifyToken(reqData["id_token"]):
-            flash("Google Account Authorized!!!", "success")
-            return redirect(url_for('login'))
-        flash("Google Account Not Authorized!", "danger")
-    return displayPage("login", False)
+@app.route("/google_login", methods=["POST"])
+def google_login():
+    req_data = request.get_json()
+    if "id_token" in req_data:
+        isVerified = OAuthController.verifyToken(req_data["id_token"])
+        if isVerified:
+            OAuthController.checkExistingUser(isVerified["user_email"], isVerified["user_token"])
+            req_data["success"] = True
+            return req_data
+    req_data["success"] = False
+    return displayPage("home", False)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -86,7 +86,7 @@ def account():
 def logout():
     UserController.endUserSession()
     flash("You have been logged out!", 'info')
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 @app.route('/todos')
 def todos():

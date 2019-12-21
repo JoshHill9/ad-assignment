@@ -33,7 +33,7 @@ def createNewUser(userId, username, email, pwd, joined_from):
     newUser.username = username
     newUser.email = email
     newUser.password = hashUserPwd(pwd)
-    user.joined_from = joined_from
+    newUser.joined_from = joined_from
     try:
         newUser.put()
         return True
@@ -42,8 +42,9 @@ def createNewUser(userId, username, email, pwd, joined_from):
     return False
 
 # SESSION CONTROL METHODS
-def startUserSession(username):
+def startUserSession(username, user_type="website_user"):
     session["user"] = username
+    session["user_type"] = user_type
     session["start_time"] = datetime.now()
     session["refresh_time"] = session["start_time"] + timedelta(minutes=45)
 
