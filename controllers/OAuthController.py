@@ -24,10 +24,9 @@ def checkExistingUser(email, token):
     if not user:
         username = email[0:email.find("@")]
         if UserController.createNewUser(username, username, email, token, "Google"):
-            UserController.startUserSession(username)
+            UserController.startUserSession(username, "google_user")
     else:
         UserController.startUserSession(user.username, "google_user")
-
 
 def notifyDatastore(type):
     if type == True:

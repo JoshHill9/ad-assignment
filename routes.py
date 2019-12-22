@@ -5,9 +5,11 @@ sys.path.append('controllers')
 
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from google.appengine.api import users
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, ShowSearchForm
 
 import UserController, OAuthController
+
+import requests
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "TestKey"
@@ -15,6 +17,8 @@ app.config["SECRET_KEY"] = "TestKey"
 args = {}
 
 def displayPage(pageName = "home", loginRequired = True):
+    args["active"] = pageName
+
     if loginRequired:
         if session.get("user"):
             return render_template("views/" + pageName + ".html", args=args)
@@ -25,7 +29,6 @@ def displayPage(pageName = "home", loginRequired = True):
         flash("Your current user sessions has expired, please log in again to confirm your identity.", 'warning')
         return redirect(url_for('login'))
 
-    args["active"] = pageName
     return render_template("views/" + pageName + ".html", args=args)
 
 @app.route("/")
@@ -76,6 +79,21 @@ def register():
         else:
             flash("Account Creation Error. Please attempt to register again", "danger")
     return displayPage("register", False)
+
+@app.route("/search", methods=["GET", "POST"])
+def show_search():
+    args["title"] = "Show Search"
+    args["searchForm"] = ShowSearchForm()
+    if args["searchForm"].validate_on_submit():
+        term = args["searchForm"].search_term.data
+        country = args["searchForm"].search_location.data
+        api_url = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/lookup"
+        query = {"term": term, "country": country}
+        headers = {"x-rapidapi-host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com", "x-rapidapi-key": "18bd841df1mshdd5f213b28bbd71p1611ddjsn225dc187fd4d"}
+        response = requests.request("GET", api_url, headers=headers, params=query)
+        args["api_response"] = response
+        return displayPage("search_results", False)
+    return displayPage("search", False)
 
 @app.route("/account")
 def account():

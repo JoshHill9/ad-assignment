@@ -2,14 +2,20 @@ nav {
   box-shadow: 0px 2px 6px 5px black;
 }
 
+html, body {
+  height:100%;
+}
+
+/* Bootstrap Navigation Bar Collapse Point*/
+@media only screen and (max-width: 991px) {
+
+}
+
 body {
   background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.2));
   background-repeat: no-repeat;
-  background-size: cover;
-}
-
-html, body {
-  height: 100%;
+  background-size: 100%;
+  overflow: hidden;
 }
 
 .alert {
