@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container-flex m-2 mt-5">
-  <form class="form-horizontal" action="{{ url_for('show_search') }}" method="POST">
+  <form class="form-horizontal" action="{{ url_for('film_search') }}" method="POST">
     <div class="form-row">
       {{ args["searchForm"].csrf_token }}
       <div class="col col-8">

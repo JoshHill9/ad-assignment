@@ -81,9 +81,9 @@ def register():
             flash("Account Creation Error. Please attempt to register again", "danger")
     return displayPage("register", False)
 
-@app.route("/search", methods=["GET", "POST"])
-def show_search():
-    args["title"] = "Show Search"
+@app.route("/film_search", methods=["GET", "POST"])
+def film_search():
+    args["title"] = "Film & TV Show Search"
     args["searchForm"] = ShowSearchForm()
     if args["searchForm"].validate_on_submit():
         term = args["searchForm"].search_term.data
