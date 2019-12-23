@@ -40,7 +40,7 @@ class LoginForm(FlaskForm):
             raise ValidationError("This account does not exists. Please re-enter an existing account username.")
 
 class ShowSearchForm(FlaskForm):
-    search_term = StringField("Seach Term", validators=[DataRequired()])
+    search_term = StringField("Search Term", validators=[DataRequired()])
     search_location = SelectField("Available In", choices=[("uk", "UK"), ("us", "US")], validators=[DataRequired()])
 
     search = SubmitField("Perform Search")

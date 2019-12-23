@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-
-</div>
+<div class="container h-100">
+  <img class="home-banner-img mt-5 mb-5" src="static/ff_header_logo.png">
+  <div class="container bg-white p-3 rounded">
+    <p>Welcome to <strong>FilmFinder</strong>!</p>
+    <p>Easily find films and TV shows on our <a href="{{ url_for('show_search') }}">search page</a> which you can then add to your <a href="{{ url_for('watchlist') }}">watchlist</a> for safekeeping!</p>
+    <p>Every TV show and Film found by this site is courtesy of the <strong>Utelly Universal Search</strong> which allows for the discovery of entertainment on most major UK and US entertainment streaming services.
+     From this FilmFinder website you can easily store TV shows and films for later viewing and come back to easily access them via the links in your watchlist</p>
+     <p class="text-muted">Please note that many of the entertainment services that are searched require a paid subscription, however, you may also find free content</p>
+  </div>
+  </div>
 {% endblock content %}

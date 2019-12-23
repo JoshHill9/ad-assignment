@@ -6,7 +6,7 @@
       <div class="col bg-white p-4 col-12">
         <form class="form-horizontal" method="POST" action="{{ url_for('login') }}">
           {{ args["loginForm"].csrf_token }}
-          <legend class="border-bottom pb-1">To-Do List Login:</legend>
+          <legend class="border-bottom pb-1">FilmFinder Login:</legend>
           <div class="form-group">
             {{ args["loginForm"].username.label }}
             {% if args["loginForm"].username.errors %}
@@ -44,7 +44,7 @@
       </div>
       <div class="text-center col-12 mt-4">
         <strong>Don't want</strong> to sign in with <strong>Google</strong>?<br>
-        <a href="{{ url_for('register') }}"> Create a To-Do List Account Here Instead!</a>
+        <a href="{{ url_for('register') }}"> Create a <strong>FilmFinder</strong> Account Here Instead!</a>
       </div>
     </div>
   </div>

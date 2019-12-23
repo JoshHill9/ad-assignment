@@ -3,19 +3,22 @@ nav {
 }
 
 html, body {
-  height:100%;
+  background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200%;
+  overflow: hidden;
 }
+
+.home-banner-img {
+    position: relative;
+    width: 80%;
+    left: 10%;
+  }
 
 /* Bootstrap Navigation Bar Collapse Point*/
 @media only screen and (max-width: 991px) {
 
-}
-
-body {
-  background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.3));
-  background-repeat: no-repeat;
-  background-size: 100%;
-  overflow: hidden;
 }
 
 .alert {

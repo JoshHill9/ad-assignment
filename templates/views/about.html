@@ -2,16 +2,15 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h1>About</h1>
-        <p>Welcome to this website! As a User of To-Dos you are able to create and save your very own personalised To-Do Lists with the ability to set reminders, share lists with colleagues and even add to lists from a slack channel.</p>
-        <br>
         <h1>Privacy Policy</h1>
-        <p>This To-Do List application collects the bare minimum information necessary to get you up and running with your personalised lists!
-          The only personal information stored will include your provided Username, Email, Secured Password and any To-Do Lists associated with your Account.
-          Please note that none of this information will be publicly shared without your consent.</p>
-        <p>There is also no personalised advertisements in this application!!! Happy listing :)</p>
+        <p>This FilmFinder web application only collects the bare minimum of information necessary to get you started on your entertainment finding journey.
+          The only personal information stored will include your  <strong>Username, Email, Secured Password</strong> and also the <a href="{{ url_for('watchlist') }}"><strong>watchlist</strong></a>associated with your account.
+          Please note that all this information will remain secured in our database and <strong>will not</strong> be shared for commercial or advertisement purposes.</p>
+        <p>In addition, we also offer an ad-free service! Please enjoy searching and we hope you find your desired content</p>
         <br>
         <h1>Image Disclaimer</h1>
         <p>All icons and images used as a part of this web application are courtesy of <a href="https://fontawesome.com/">https://fontawesome.com/</a> and are in no way owned / proclaimed owned by this application.</p>
+        <h1>Utelly API</h1>
+        <p>Link for Utelly here</p>
     </div>
 {% endblock content %}

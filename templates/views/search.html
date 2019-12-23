@@ -1,11 +1,11 @@
-{% extends "layout2.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
 <div class="container-flex m-2 mt-5">
   <form class="form-horizontal" action="{{ url_for('show_search') }}" method="POST">
     <div class="form-row">
       {{ args["searchForm"].csrf_token }}
-      <div class="col col-6">
+      <div class="col col-8">
         {{ args["searchForm"].search_term.label }}:
         {{ args["searchForm"].search_term(class="form-control", placeholder="Search Movie / TV Show")}}
       </div>
@@ -13,8 +13,10 @@
         {{ args["searchForm"].search_location.label }}:
         {{ args["searchForm"].search_location(class="form-control") }}
       </div>
-      <div class="col col-2">
-        {{ args["searchForm"].search(class="btn btn-primary form-control") }}
+    </div>
+    <div class="form-row mt-3">
+      <div class="col col-1">
+        {{ args["searchForm"].search(class="btn btn-primary") }}
       </div>
     </div>
   </form>

@@ -1,5 +1,32 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  {{ args["api_response"] }}
+<div class="container mt-4 mb-4 h-100 overflow-auto">
+  {% if "results" in args["api_response"] %}
+    <div class="list-group">
+    {% for result in args["api_response"]["results"] %}
+      {% if result["name"] %}
+        <div class="list-group-item">
+          <h3>{{ result["name"] }}</h3>
+          <div class="list-group">
+              {% if "locations" in result %}
+                {% for location in result["locations"] %}
+                  {% if location["url"] %}
+                    <a class="list-group-item list-group-item-action" href="{{ location['url'] }}">
+                      {% if location["icon"] %}<img src="{{ location['icon'] }}">{% endif %}<strong>[{{ location["display_name"] }}]</strong>
+                    </a>
+                  {% else %}
+                    <div class="list-group-item list-group-item-action">
+                      Available from <strong>[{{ location["display_name"] }}]</strong> - no access link available!
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  {% endif %}
+</div>
 {% endblock content %}

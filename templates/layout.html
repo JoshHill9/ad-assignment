@@ -97,12 +97,12 @@
                       <a class="nav-link pl-3" href="{{ url_for('about') }}"><i class="fas fa-info"></i> About</a>
                     </li>
                   {% if session.get("user") %}
-                    {% if args.get("active") == "todos" %}
+                    {% if args.get("active") == "watchlist" %}
                       <li class="nav-item active">
                     {% else %}
                       <li class="nav-item">
                     {% endif %}
-                        <a class="nav-link pl-3" href="{{ url_for('todos') }}">My To-DOs</a>
+                        <a class="nav-link pl-3" href="{{ url_for('watchlist') }}"><i class="fas fa-tv"></i> My Watchlist</a>
                       </li>
                   {% endif %}
               </ul>
