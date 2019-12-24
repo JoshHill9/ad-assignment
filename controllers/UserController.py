@@ -5,12 +5,14 @@ sys.path.append("lib")
 from datetime import datetime, timedelta
 from pybcrypt import bcrypt
 from flask import session
-
+import random
 import User
 
 # USER CONTROL METHODS
-def getUser(username=None, email=None):
-    if username:
+def getUser(user_id=None, username=None, email=None):
+    if user_id:
+        return find_by_id(user_id)
+    elif username:
         return User.findUserByName(username)
     return User.findUserByEmail(email)
 
@@ -28,8 +30,16 @@ def checkUserPwd(username, pwd):
             return True
     return False
 
-def createNewUser(userId, username, email, pwd, joined_from):
-    newUser = User.initUserEntityKey(userId)
+def createNewUser(user_id, username, email, pwd, joined_from):
+    newUser = None
+    if user_id == "auto_gen":
+        auto_id = username + str(randint(0,1000))
+        while getUser(user_id=auto_id):
+            auto_id = username + str(randint(0,1000))
+        newUser = User.initUserEntityKey(auto_id)
+    else:
+        newUser = User.initUserEntityKey(user_id)
+
     newUser.username = username
     newUser.email = email
     newUser.password = hashUserPwd(pwd)
