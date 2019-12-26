@@ -1,43 +1,28 @@
-from google.appengine.api import users
 from google.appengine.ext import ndb
 from flask import redirect
 
 class User(ndb.Model):
+    user_id = ndb.StringProperty()
     username = ndb.StringProperty()
     email = ndb.StringProperty()
     password = ndb.StringProperty()
     join_date = ndb.DateProperty(auto_now_add=True)
     joined_from = ndb.StringProperty()
 
-def findUserByName(username=None):
-    userKey = ndb.Key('User', username)
+def find_by_id(user_id=None):
+    userKey = ndb.Key("User", user_id)
     return userKey.get()
+
+def findUserByName(username=None):
+    query = User.query().filter(User.username == username)
+    return query.get()
 
 def findUserByEmail(email=None):
     query = User.query().filter(User.email == email)
     return query.get()
 
-def initUserEntityKey(username=None):
-    if username:
-        user = User(id=username)
+def initUserEntityKey(user_id=None):
+    if user_id:
+        user = User(id=user_id)
         return user
     return None
-
-def getCurrentUser():
-    user = users.get_current_user()
-    if user:
-        return user
-    return None
-
-def getUserLoginURL():
-    return users.create_login_url('/account')
-
-def getUserLogoutURL():
-    return users.create_logout_url('/login')
-
-def loginUser():
-    user = users.get_current_user()
-    return user
-
-def logoutUser():
-    return redirect(getUserLogoutURL)

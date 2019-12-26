@@ -5,14 +5,17 @@ sys.path.append("lib")
 from datetime import datetime, timedelta
 from pybcrypt import bcrypt
 from flask import session
-
-import User
+import User, WatchlistItem
+import random
 
 # USER CONTROL METHODS
-def getUser(username=None, email=None):
-    if username:
+def getUser(user_id=None, username=None, email=None):
+    if user_id:
+        return User.find_by_id(user_id)
+    elif username:
         return User.findUserByName(username)
-    return User.findUserByEmail(email)
+    elif email:
+        return User.findUserByEmail(email)
 
 def hashUserPwd(pwd):
     newPwd = bcrypt.hashpw(pwd, bcrypt.gensalt(6))
@@ -20,7 +23,7 @@ def hashUserPwd(pwd):
     return newPwd
 
 def checkUserPwd(username, pwd):
-    user = getUser(username)
+    user = getUser(username=username)
     if user:
         hashPwd = bcrypt.hashpw(pwd, user.password)
         if hashPwd == user.password:
@@ -28,8 +31,18 @@ def checkUserPwd(username, pwd):
             return True
     return False
 
-def createNewUser(userId, username, email, pwd, joined_from):
-    newUser = User.initUserEntityKey(userId)
+def createNewUser(user_id, username, email, pwd, joined_from):
+    newUser = None
+    if user_id == "auto_gen":
+        auto_id = username + str(random.randint(0,1000))
+        while getUser(user_id=auto_id):
+            auto_id = username + str(randint(0,1000))
+        newUser = User.initUserEntityKey(auto_id)
+        newUser.user_id = auto_id
+    else:
+        newUser = User.initUserEntityKey(user_id)
+        newUser.user_id = user_id
+
     newUser.username = username
     newUser.email = email
     newUser.password = hashUserPwd(pwd)
@@ -40,6 +53,7 @@ def createNewUser(userId, username, email, pwd, joined_from):
     except ValueError:
         pass
     return False
+
 
 # SESSION CONTROL METHODS
 def startUserSession(username, user_type="website_user"):

@@ -19,19 +19,11 @@ def verifyToken(provided_token):
         pass
     return False
 
-def checkExistingUser(email, token):
+def checkExistingUser(user_id, email, token):
     user = UserController.getUser(email=email)
     if not user:
         username = email[0:email.find("@")]
-        if UserController.createNewUser(username, username, email, token, "Google"):
+        if UserController.createNewUser(user_id, username, email, token, "Google"):
             UserController.startUserSession(username, "google_user")
     else:
         UserController.startUserSession(user.username, "google_user")
-
-def notifyDatastore(type):
-    if type == True:
-        return UserController.createNewUser("token_found", "found", "token", "lel", "Google")
-    elif type == False:
-        return UserController.createNewUser("token_mismatch", "notfound", "token", "ohnoe", "Google")
-    elif type == "Not Found":
-        return UserController.createNewUser("token_notfound", "notgood", "token", "sadface", "Google")

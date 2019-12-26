@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5 card p-3">
+        <h1>Welcome to <strong>FilmFinder</strong>!</h1>
+        <p>Easily find films and TV shows using the <a href="{{ url_for('home') }}">search function</a> which you can then be added to your <a href="{{ url_for('watchlist') }}">watchlist</a> for safekeeping!</p>
+        <p>Every TV show and Film found by this site is courtesy of the <strong>Utelly Universal Search</strong> which allows for the discovery of entertainment on most major UK and US entertainment streaming services.
+          From this FilmFinder website you can easily store TV shows and films for later viewing and come back to easily access them via the links in your watchlist</p>
+        <p>Please note that many of the entertainment services that are searched require a paid subscription, however, you may also find free content</p>
         <h1>Privacy Policy</h1>
         <p>This FilmFinder web application only collects the bare minimum of information necessary to get you started on your entertainment finding journey.
-          The only personal information stored will include your  <strong>Username, Email, Secured Password</strong> and also the <a href="{{ url_for('watchlist') }}"><strong>watchlist</strong></a>associated with your account.
+          The only personal information stored will include your  <strong>Username, Email, Secured Password</strong> and also the <a href="{{ url_for('watchlist') }}"><strong>watchlist</strong></a> associated with your account.
           Please note that all this information will remain secured in our database and <strong>will not</strong> be shared for commercial or advertisement purposes.</p>
         <p>In addition, we also offer an ad-free service! Please enjoy searching and we hope you find your desired content</p>
         <br>

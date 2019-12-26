@@ -1,14 +1,43 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container h-100">
+<div class="container h-100 mt-5 mb-5">
   <img class="home-banner-img mt-5 mb-5" src="static/ff_header_logo.png">
-  <div class="container bg-white p-3 rounded">
-    <p>Welcome to <strong>FilmFinder</strong>!</p>
-    <p>Easily find films and TV shows on our <a href="{{ url_for('show_search') }}">search page</a> which you can then add to your <a href="{{ url_for('watchlist') }}">watchlist</a> for safekeeping!</p>
-    <p>Every TV show and Film found by this site is courtesy of the <strong>Utelly Universal Search</strong> which allows for the discovery of entertainment on most major UK and US entertainment streaming services.
-     From this FilmFinder website you can easily store TV shows and films for later viewing and come back to easily access them via the links in your watchlist</p>
-     <p class="text-muted">Please note that many of the entertainment services that are searched require a paid subscription, however, you may also find free content</p>
+  <div class="text-monospace text-white">
+    <p class="text-center bg-dark">Please enter a search term / terms to find movies and TV shows that are available in the selected country code.</p>
+    <p class="text-center bg-dark">Please note that only UK and US search services are available</p>
+  </div>
+  <div class="container-flex m-2 mt-5">
+    <form class="form-horizontal" action="{{ url_for('home') }}" method="POST">
+      <div class="form-row">
+        {{ args["searchForm"].csrf_token }}
+        <div class="col col-8">
+          {{ args["searchForm"].search_term.label }}:
+          {% if session.get("user") %}
+            {{ args["searchForm"].search_term(class="form-control", placeholder="Search Movie / TV Show") }}
+          {% else %}
+            {{ args["searchForm"].search_term(class="form-control", placeholder="Please login / register to search...", disabled=True) }}
+          {% endif %}
+        </div>
+        <div class="col col-4">
+          {{ args["searchForm"].search_location.label }}:
+          {% if session.get("user") %}
+            {{ args["searchForm"].search_location(class="form-control") }}
+          {% else %}
+            {{ args["searchForm"].search_location(class="form-control", disabled=True) }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="form-row mt-3">
+        <div class="col col-1">
+          {% if session.get("user") %}
+            {{ args["searchForm"].search(class="btn btn-dark") }}
+          {% else %}
+            {{ args["searchForm"].search(class="btn btn-dark", disabled=True) }}
+          {% endif %}
+        </div>
+      </div>
+    </form>
   </div>
   </div>
 {% endblock content %}
