@@ -2,11 +2,11 @@
 
 {% block content %}
   <div class="container mt-4 mb-4">
-    {% if "results" in args["api_response"] %}
-    <h1 class="border-bottom text-center p-4">{{ args["api_response"]["results"]|length }} Results Returned</h1>
+    {{ args["ff_response"] }}
+    <h1 class="border-bottom text-center p-4">{{ args["ff_response"]["results"]|length }} Results Returned</h1>
       <div class="list-group">
         <ol>
-        {% for result in args["api_response"]["results"] %}
+        {% for result in args["ff_response"] %}
         <div class="">
           {% if result["name"] %}
             <h3 class="ml-5 mb-3">
@@ -21,15 +21,11 @@
                     <a class="list-group-item list-group-item-action" href="{{ location['url'] }}">
                       {% if location["icon"] %}<img src="{{ location['icon'] }}" class="border-right pr-3">{% endif %} <span class="ml-3">Available on {{ location["display_name"] }}. Click here to open URL.</span>
                     </a>
-                  {% else %}
-                <!--
-                    <div class="list-group-item list-group-item-action">
-                      Available from <strong>[{{ location["display_name"] }}]</strong> - no access link available!
-                    </div>
-                -->
-                    <span class="{{ result['id'] }}-alt-sources"></span>
                   {% endif %}
                 {% endfor %}
+              {% endif %}
+              {% if result["alternate_locations"] %}
+                <span class="alt_locations">{{ result["alternate_locations"] }}</span>
               {% endif %}
             </div>
           {% endif %}
@@ -37,6 +33,5 @@
         {% endfor %}
         </ol>
       </div>
-    {% endif %}
   </div>
 {% endblock content %}
