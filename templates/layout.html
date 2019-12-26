@@ -96,13 +96,6 @@
                   {% endif %}
                       <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-info fa-fw"></i> About</a>
                     </li>
-                  {% if args.get("active") == "search" %}
-                    <li class="nav-item active">
-                  {% else %}
-                    <li class="nav-item">
-                  {% endif %}
-                      <a class="nav-link" href="{{ url_for('film_search') }}"><i class="fas fa-search fa-fw"></i> Film/Show Search</a>
-                    </li>
                   {% if session.get("user") %}
                     {% if args.get("active") == "watchlist" %}
                       <li class="nav-item active">
@@ -115,8 +108,8 @@
               </ul>
           </div>
 
-          <div class="navbar-collapse collapse" id="navbarLinks">
-            <ul class="nav navbar-nav navbar-right">
+          <div class="navbar-collapse collapse navbar-right" id="navbarLinks">
+            <ul class="nav navbar-nav ml-auto">
               {% if session.get("user") %}
                 {% if args.get("active") == "account" %}
                   <li class="nav-item active">

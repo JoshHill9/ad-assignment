@@ -8,7 +8,6 @@ class User(ndb.Model):
     password = ndb.StringProperty()
     join_date = ndb.DateProperty(auto_now_add=True)
     joined_from = ndb.StringProperty()
-    watchlist_id = ndb.StringProperty()
 
 def find_by_id(user_id=None):
     userKey = ndb.Key("User", user_id)
@@ -23,7 +22,7 @@ def findUserByEmail(email=None):
     return query.get()
 
 def initUserEntityKey(user_id=None):
-    if username:
+    if user_id:
         user = User(id=user_id)
         return user
     return None

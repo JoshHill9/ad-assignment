@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="container mt-5">
-    <form class="form-horizontal bg-white p-4" method="POST" action="/register">
+  <div class="container card mt-5 mb-5 p-3">
+    <form class="form-horizontal p-4" method="POST" action="/register">
       {{ args["registerForm"].csrf_token }}
       <legend class="border-bottom pb-1">Registration Form:</legend>
       <div class="form-group">
@@ -59,8 +59,8 @@
       </div>
       {{ args["registerForm"].submit(class="btn btn-dark") }}
     </form>
-    <span class="text-muted">
-      Already have an account?
+    <span class="text-center">
+      <strong>Already have an account?<strong>
       <a href="{{ url_for('login') }}">Login Here!</a>
     </span>
   </div>
