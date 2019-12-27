@@ -3,7 +3,7 @@ from google.auth.transport import requests
 
 import UserController
 
-def verifyToken(provided_token):
+def verify_token(provided_token):
     try:
         idinfo = id_token.verify_oauth2_token(provided_token, requests.Request(), "701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com")
 
@@ -19,11 +19,11 @@ def verifyToken(provided_token):
         pass
     return False
 
-def checkExistingUser(user_id, email, token):
-    user = UserController.getUser(email=email)
+def check_existing_user(user_id, email, token):
+    user = UserController.get_user(email=email)
     if not user:
         username = email[0:email.find("@")]
-        if UserController.createNewUser(user_id, username, email, token, "Google"):
-            UserController.startUserSession(username, "google_user")
+        if UserController.create_new_user(user_id, username, email, token, "Google"):
+            UserController.start_user_session(username, "google_user")
     else:
-        UserController.startUserSession(user.username, "google_user")
+        UserController.start_user_session(user.username, "google_user")

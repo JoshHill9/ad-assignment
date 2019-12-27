@@ -13,15 +13,15 @@ def find_by_id(user_id=None):
     userKey = ndb.Key("User", user_id)
     return userKey.get()
 
-def findUserByName(username=None):
+def find_user_by_name(username=None):
     query = User.query().filter(User.username == username)
     return query.get()
 
-def findUserByEmail(email=None):
+def find_user_by_email(email=None):
     query = User.query().filter(User.email == email)
     return query.get()
 
-def initUserEntityKey(user_id=None):
+def init_user_entity_key(user_id=None):
     if user_id:
         user = User(id=user_id)
         return user
