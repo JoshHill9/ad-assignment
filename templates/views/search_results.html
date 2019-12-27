@@ -2,12 +2,10 @@
 
 {% block content %}
   <div class="container mt-4 mb-4">
-    {% if "results" in args["api_response"] %}
-    <h1 class="border-bottom text-center p-4">{{ args["api_response"]["results"]|length }} Results Returned</h1>
+    <h1 class="border-bottom text-center p-4">{{ args["ff_response"]|length }} Results Returned</h1>
       <div class="list-group">
         <ol>
-        {% for result in args["api_response"]["results"] %}
-        <div class="">
+        {% for result in args["ff_response"] %}
           {% if result["name"] %}
             <h3 class="ml-5 mb-3">
               <li>
@@ -18,25 +16,26 @@
               {% if "locations" in result %}
                 {% for location in result["locations"] %}
                   {% if location["url"] %}
-                    <a class="list-group-item list-group-item-action" href="{{ location['url'] }}">
+                  <div class="row">
+                    <a class="list-group-item list-group-item-action col-12" href="{{ location['url'] }}">
                       {% if location["icon"] %}<img src="{{ location['icon'] }}" class="border-right pr-3">{% endif %} <span class="ml-3">Available on {{ location["display_name"] }}. Click here to open URL.</span>
                     </a>
-                  {% else %}
-                <!--
-                    <div class="list-group-item list-group-item-action">
-                      Available from <strong>[{{ location["display_name"] }}]</strong> - no access link available!
-                    </div>
-                -->
-                    <span class="{{ result['id'] }}-alt-sources"></span>
+                  </div>
                   {% endif %}
                 {% endfor %}
               {% endif %}
+              {% if result["alternate_locations"] %}
+              <div class="row">
+                <div class="list-group-item col-12">
+                  <strong>This TV Show / Film can be found from the following sources:</strong><br>
+                  {{ result["alternate_locations"] }}
+                </div>
+              </div>
+              {% endif %}
             </div>
           {% endif %}
-          </div>
         {% endfor %}
         </ol>
       </div>
-    {% endif %}
   </div>
 {% endblock content %}
