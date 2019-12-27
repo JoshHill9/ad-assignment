@@ -64,7 +64,7 @@ def home():
                         alt_length = len(alternate_locations)
                         if alt_length > 0:
                             alternate_locations = alternate_locations[0:alt_length-2] + "."
-                        formatted_results[result["id"]]["locations"] = formatted_locations
+                        formatted_results[result["id"]]["locations"] = [formatted_locations]
                         formatted_results[result["id"]]["alternate_locations"] = alternate_locations
 
         args["ff_response"] = formatted_results
