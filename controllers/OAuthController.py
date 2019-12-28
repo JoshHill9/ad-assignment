@@ -25,7 +25,7 @@ def check_existing_user(user_id, email, token):
     user = UserController.get_user(email=email)
     if not user:
         username = email[0:email.find("@")]
-        if UserController.create_new_user(user_id, username, email, token, "Google"):
+        if UserController.create_user(user_id, username, email, token, "Google"):
             UserController.start_user_session(username, "google_user")
     else:
         UserController.start_user_session(user.username, "google_user")

@@ -5,7 +5,7 @@
   <img class="home-banner-img mt-5 mb-5" src="static/ff_header_logo.png">
   <div class="text-monospace text-white">
     <p class="text-center bg-dark">Please enter a search term / terms to find movies and TV shows that are available in the selected country code.</p>
-    <p class="text-center bg-dark">Please note that only UK and US search services are available</p>
+    <p class="text-center bg-dark">Please note that only UK and US search services are available.</p>
   </div>
   <div class="container-flex m-2 mt-5">
     <form class="form-horizontal" action="{{ url_for('home') }}" method="POST">
@@ -14,7 +14,7 @@
         <div class="col col-8">
           {{ args["search_form"].search_term.label }}:
           {% if session.get("user") %}
-            {{ args["search_form"].search_term(class="form-control", placeholder="Search Movie / TV Show") }}
+            {{ args["search_form"].search_term(class="form-control", placeholder="Search Movie / TV Show by name") }}
           {% else %}
             {{ args["search_form"].search_term(class="form-control", placeholder="Please login / register to search...", disabled=True) }}
           {% endif %}

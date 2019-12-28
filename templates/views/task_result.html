@@ -8,5 +8,14 @@
   {% elif result == "fail" %}
     <h1>Search Result Storage/Deletion Failed</h1>
     <h2>Task Incomplete</h2>
+  {% elif result == "form_validated" %}
+    <h1>Form Token Validated</h1>
+    <h2>Task Queued</h2>
+  {% elif result == "form_invalid" %}
+    <h1>Form Token Invalid</h1>
+    <h2>Task Not Queued</h2>
+  {% elif result == "request_invalid" %}
+    <h1>Request Data Incorrect</h1>
+    <h2>Task Not Queued</h2>
   {% endif %}
 {% endif %}

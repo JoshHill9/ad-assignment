@@ -6,7 +6,7 @@ sys.path.append('controllers')
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from forms import RegistrationForm, LoginForm, SearchForm
 
-import UserController, OAuthController, SearchController
+import UserController, OAuthController, SearchResultController, SearchValidatorController
 import os
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def display_page(page_name = "home", login_required = True):
 
     return render_template("views/" + page_name + ".html", args=args)
 
-
+# Display home page and load film/tv show search form
 @app.route("/", methods=["GET", "POST"])
 def home():
     args["title"] = "Film & TV Show Search | Home"
@@ -40,20 +40,29 @@ def home():
     if args["search_form"].validate_on_submit():
         term = args["search_form"].search_term.data
         country = args["search_form"].search_location.data
-        saved_result = SearchController.get_search_result(term, country)
+        # Check to see if the search has been performed recently and stored in Datastore
+        saved_result = SearchResultController.get_search_result(term, country)
+        csrf_token = args["search_form"].csrf_token.current_token
         if saved_result:
-            if SearchController.check_result_expiry(term, country):
-                args["search_results"] = SearchController.perform_search(term, country)
+            # Check if the stored search result is expired (more than 1 day old)
+            if SearchResultController.check_result_expiry(term, country):
+                # Gets new search result from Utelly API
+                args["search_results"] = SearchResultController.perform_search(term, country)
                 args["search_date"] = "Just Now"
-                SearchController.queue_search_task({"term": term, "country": country, "expired": True})
-                SearchController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"])})
+                SearchValidatorController.create_validator(term, country, csrf_token)
+                # Queues a task on task-be module to delete expired Datastore search result
+                SearchResultController.queue_search_task({"term": term, "country": country, "expired": True, "csrf": csrf_token})
+                # Queues a task on task-be module to save new search result from Utelly API
+                SearchResultController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"]), "csrf": csrf_token})
             else:
-                args["search_results"] = SearchController.format_saved_result(saved_result.search_result)
+                # Formats stored result from String to List type for correct displaying
+                args["search_results"] = SearchResultController.format_saved_result(saved_result.search_result)
                 args["search_date"] = saved_result.search_date
         else:
-            args["search_results"] = SearchController.perform_search(term, country)
+            args["search_results"] = SearchResultController.perform_search(term, country)
             args["search_date"] = "Just Now"
-            SearchController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"])})
+            SearchValidatorController.create_validator(term, country, csrf_token)
+            SearchResultController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"]), "csrf": csrf_token})
         return display_page("search_results")
     return display_page("home", False)
 
@@ -99,7 +108,7 @@ def register():
     args["registration_form"] = RegistrationForm()
     if args["registration_form"].validate_on_submit():
         username = args["registration_form"].username.data
-        if UserController.create_new_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data, "Website"):
+        if UserController.create_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data, "Website"):
             flash("Your account [" + username + "] has been created! Please login to continue.", "success")
             return redirect(url_for("login"))
         else:

@@ -4,14 +4,12 @@
   <div class="container mt-4 mb-4">
     <h1 class="border-bottom text-center pt-4">{{ args["search_results"]|length }} Results Returned</h1>
     <p class="text-center bg-dark text-monospace text-white">Displaying results from: {{ args["search_date"] }}<p>
-      <div class="list-group">
-        <ol>
+    <div class="list-group">
+      <ol class="m-0 p-0">
         {% for result in args["search_results"] %}
           {% if result["name"] %}
             <h3 class="ml-5 mb-3">
-              <li>
-                {{ result["name"] }}
-              </li>
+              <li>{{ result["name"] }}</li>
             </h3>
             <div class="list-group mb-3">
               {% if "locations" in result %}
