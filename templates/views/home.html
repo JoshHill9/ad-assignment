@@ -10,30 +10,30 @@
   <div class="container-flex m-2 mt-5">
     <form class="form-horizontal" action="{{ url_for('home') }}" method="POST">
       <div class="form-row">
-        {{ args["searchForm"].csrf_token }}
+        {{ args["search_form"].csrf_token }}
         <div class="col col-8">
-          {{ args["searchForm"].search_term.label }}:
+          {{ args["search_form"].search_term.label }}:
           {% if session.get("user") %}
-            {{ args["searchForm"].search_term(class="form-control", placeholder="Search Movie / TV Show") }}
+            {{ args["search_form"].search_term(class="form-control", placeholder="Search Movie / TV Show") }}
           {% else %}
-            {{ args["searchForm"].search_term(class="form-control", placeholder="Please login / register to search...", disabled=True) }}
+            {{ args["search_form"].search_term(class="form-control", placeholder="Please login / register to search...", disabled=True) }}
           {% endif %}
         </div>
         <div class="col col-4">
-          {{ args["searchForm"].search_location.label }}:
+          {{ args["search_form"].search_location.label }}:
           {% if session.get("user") %}
-            {{ args["searchForm"].search_location(class="form-control") }}
+            {{ args["search_form"].search_location(class="form-control") }}
           {% else %}
-            {{ args["searchForm"].search_location(class="form-control", disabled=True) }}
+            {{ args["search_form"].search_location(class="form-control", disabled=True) }}
           {% endif %}
         </div>
       </div>
       <div class="form-row mt-3">
         <div class="col col-1">
           {% if session.get("user") %}
-            {{ args["searchForm"].search(class="btn btn-dark") }}
+            {{ args["search_form"].search(class="btn btn-dark") }}
           {% else %}
-            {{ args["searchForm"].search(class="btn btn-dark", disabled=True) }}
+            {{ args["search_form"].search(class="btn btn-dark", disabled=True) }}
           {% endif %}
         </div>
       </div>

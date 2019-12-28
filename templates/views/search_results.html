@@ -2,10 +2,10 @@
 
 {% block content %}
   <div class="container mt-4 mb-4">
-    <h1 class="border-bottom text-center p-4">{{ args["ff_response"]|length }} Results Returned</h1>
+    <h1 class="border-bottom text-center p-4">{{ args["search_results"]|length }} Results Returned</h1>
       <div class="list-group">
         <ol>
-        {% for result in args["ff_response"] %}
+        {% for result in args["search_results"] %}
           {% if result["name"] %}
             <h3 class="ml-5 mb-3">
               <li>
@@ -24,11 +24,11 @@
                   {% endif %}
                 {% endfor %}
               {% endif %}
-              {% if result["alternate_locations"] %}
+              {% if result["non_url_locations"] %}
               <div class="row">
                 <div class="list-group-item col-12">
                   <strong>This TV Show / Film can be found from the following sources:</strong><br>
-                  {{ result["alternate_locations"] }}
+                  {{ result["non_url_locations"] }}
                 </div>
               </div>
               {% endif %}

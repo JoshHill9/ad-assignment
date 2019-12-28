@@ -10,8 +10,8 @@ class User(ndb.Model):
     joined_from = ndb.StringProperty()
 
 def find_by_id(user_id=None):
-    userKey = ndb.Key("User", user_id)
-    return userKey.get()
+    user_key = ndb.Key("User", user_id)
+    return user_key.get()
 
 def find_user_by_name(username=None):
     query = User.query().filter(User.username == username)
@@ -21,6 +21,7 @@ def find_user_by_email(email=None):
     query = User.query().filter(User.email == email)
     return query.get()
 
+# Returns User Entity initialised with the Entity Key set to the User ID
 def init_user_entity_key(user_id=None):
     if user_id:
         user = User(id=user_id)

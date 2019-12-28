@@ -19,6 +19,8 @@ def verify_token(provided_token):
         pass
     return False
 
+# Looks up User in Datastore and automatically creates account if User is not found
+# Starts the User Session for new/existing User
 def check_existing_user(user_id, email, token):
     user = UserController.get_user(email=email)
     if not user:
