@@ -11,9 +11,9 @@ import UserController
 
 class RegistrationForm(FlaskForm):
 
-    username = StringField("Username", validators=[DataRequired(), Length(min=4, max=20)])
+    username = StringField("Username", validators=[DataRequired(), Length(min=4, max=20, message="Username should be between 4 and 20 characters long.")])
     email = StringField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=8, max=30, message="Password should be between 8 and 30 characters long.")])
     confirm_password = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
 
     submit = SubmitField("Register")
@@ -26,6 +26,17 @@ class RegistrationForm(FlaskForm):
         if UserController.get_user(email=email.data):
             raise ValidationError("This email address is already in use. Please login instead.")
 
+    def validate_password(form, password):
+        validators = {"upper": False, "lower": False, "digit": False}
+        for letter in password.data:
+            if letter.isupper():
+                validators["upper"] = True
+            if letter.islower():
+                validators["lower"] = True
+            if letter.isdigit():
+                validators["digit"] = True
+        if not(validators["upper"] and validators["lower"] and validators["digit"]):
+            raise ValidationError("Password must contain atleast: one uppercase, one lowercase character and one digit.")
 
 class LoginForm(FlaskForm):
 
