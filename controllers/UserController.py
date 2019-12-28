@@ -10,11 +10,11 @@ import random
 
 def get_user(user_id=None, username=None, email=None):
     if user_id:
-        return User.find_by_id(user_id)
+        return User.get_by_id(user_id)
     elif username:
-        return User.find_user_by_name(username)
+        return User.get_by_username(username)
     elif email:
-        return User.find_user_by_email(email)
+        return User.get_by_email(email)
 
 def hash_user_pwd(pwd):
     new_pwd = bcrypt.hashpw(pwd, bcrypt.gensalt(6))
@@ -30,30 +30,20 @@ def check_user_pwd(username, pwd):
             return True
     return False
 
-def create_new_user(user_id, username, email, pwd, joined_from):
-    new_user = None
+def generate_user_id(username):
+    user_id = username + str(random.randint(0,1000))
+    while get_user(user_id=user_id):
+        user_id = username + str(random.randint(0,1000))
+    return user_id
+
+def create_user(user_id, username, email, pwd, joined_from):
     # Automatically generates Username for Google Users based on Google Email
     if user_id == "auto_gen":
-        auto_id = username + str(random.randint(0,1000))
-        while get_user(user_id=auto_id):
-            auto_id = username + str(randint(0,1000))
-        new_user = User.init_user_entity_key(auto_id)
-        new_user.user_id = auto_id
-    else:
-        # Initialises Entity Key for the new User Entity
-        new_user = User.init_user_entity_key(user_id)
-        new_user.user_id = user_id
+        user_id = generate_user_id(username)
 
-    new_user.username = username
-    new_user.email = email
-    new_user.password = hash_user_pwd(pwd)
-    new_user.joined_from = joined_from
-    try:
-        new_user.put()
-        return True
-    except ValueError:
-        pass
-    return False
+    hashed_pwd = hash_user_pwd(pwd)
+    user = User.create(user_id, username, email, hashed_pwd, joined_from)
+    return user
 
 # SESSION CONTROL METHODS
 def start_user_session(username, user_type="website_user"):

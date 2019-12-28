@@ -9,12 +9,12 @@ class SearchResult(ndb.Model):
     search_date = ndb.DateTimeProperty(auto_now_add=True)
 
 def get(term, location):
-    key = term + "" + location
+    key = term + location
     search_result_key = ndb.Key("SearchResult", key)
     return search_result_key.get()
 
 def delete(term, location):
-    key = term + "" + location
+    key = term + location
     search_result = ndb.Key("SearchResult", key)
     if search_result:
         search_result.delete()

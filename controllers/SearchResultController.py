@@ -25,6 +25,7 @@ def delete_search_result(term, location):
 def format_saved_result(result):
     return ast.literal_eval(result)
 
+# Sends POST request to task-be module with search result data
 def queue_search_task(params = {}):
     if params:
         module_url = "http://" + modules.get_hostname(module="task-be") + "/create_task"
