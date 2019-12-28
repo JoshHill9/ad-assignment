@@ -4,24 +4,25 @@ sys.path.append('models')
 sys.path.append('controllers')
 
 from flask import Flask, render_template, redirect, request, flash, url_for, session
-from forms import RegistrationForm, LoginForm, ShowSearchForm
+from forms import RegistrationForm, LoginForm, SearchForm
 
-import UserController, OAuthController
-
-import requests
-import json
+import UserController, OAuthController, SearchService
+import os
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "TestKey"
+app.config["SECRET_KEY"] = os.urandom(24)
 
 args = {}
 
-def display_page(pageName = "home", loginRequired = True):
-    args["active"] = pageName
+# Renders page view and sets active page in navigation bar.
+# Prevents access to pages that require login_form
+# Notifies User of end of Session
+def display_page(page_name = "home", login_required = True):
+    args["active"] = page_name
 
-    if loginRequired:
+    if login_required:
         if session.get("user"):
-            return render_template("views/" + pageName + ".html", args=args)
+            return render_template("views/" + page_name + ".html", args=args)
         flash("You must be logged in to view this page!", 'warning')
         return redirect(url_for('login'))
 
@@ -29,55 +30,35 @@ def display_page(pageName = "home", loginRequired = True):
         flash("Your current user sessions has expired, please log in again to confirm your identity.", 'warning')
         return redirect(url_for('login'))
 
-    return render_template("views/" + pageName + ".html", args=args)
+    return render_template("views/" + page_name + ".html", args=args)
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     args["title"] = "Film & TV Show Search | Home"
-    args["searchForm"] = ShowSearchForm()
-    if args["searchForm"].validate_on_submit():
-        term = args["searchForm"].search_term.data
-        country = args["searchForm"].search_location.data
-        api_url = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/lookup"
-        query = {"term": term, "country": country}
-        headers = {
-            'x-rapidapi-host': "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
-            'x-rapidapi-key': "18bd841df1mshdd5f213b28bbd71p1611ddjsn225dc187fd4d"
-        }
-        response = requests.request("GET", api_url, headers=headers, params=query)
-        args["api_response"] = json.loads(response.text)
-        formatted_results = []
-        if "results" in args["api_response"]:
-            for result in args["api_response"]["results"]:
-                if "name" in result:
-                    if "locations" in result:
-                        formatted_locations = []
-                        alternate_locations = ""
-                        for location in result["locations"]:
-                            if location["url"]:
-                                formatted_locations = formatted_locations + [{"url": location["url"], "icon": location["icon"], "display_name": location["display_name"]}]
-                            else:
-                                alternate_locations += location["display_name"] + ", "
-                        alt_length = len(alternate_locations)
-                        if alt_length > 0:
-                            alternate_locations = alternate_locations[0:alt_length-2] + "."
-                        formatted_results = formatted_results + [{"id": result["id"], "name": result["name"], "picture": result["picture"], "locations": formatted_locations, "alternate_locations": alternate_locations}]
-        args["ff_response"] = formatted_results
+    args["search_form"] = SearchForm()
+    if args["search_form"].validate_on_submit():
+        term = args["search_form"].search_term.data
+        country = args["search_form"].search_location.data
+        # Communicates with Utelly API to find search results
+        args["search_results"] = SearchService.perform_search(term, country)
         return display_page("search_results")
     return display_page("home", False)
+
 
 @app.route("/about")
 def about():
     args["title"] = "About"
     return display_page("about", False)
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     args["title"] = "Login"
-    args["loginForm"] = LoginForm()
-    if args["loginForm"].validate_on_submit():
-        username = args["loginForm"].username.data
-        pwd = args["loginForm"].password.data
+    args["login_form"] = LoginForm()
+    if args["login_form"].validate_on_submit():
+        username = args["login_form"].username.data
+        pwd = args["login_form"].password.data
         if UserController.check_user_pwd(username, pwd):
             pwd = None
             UserController.start_user_session(username)
@@ -86,40 +67,47 @@ def login():
         flash("Sorry, the login information provided was not correct", 'danger')
     return display_page("login", False)
 
+# Handles Request sent from Google Sign In button
+# Verifies provided token with OAuth2.0 and allows sign in from google users
 @app.route("/google_login", methods=["POST"])
 def google_login():
-    req_data = request.get_json()
-    if "id_token" in req_data:
-        isVerified = OAuthController.verify_token(req_data["id_token"])
-        if isVerified:
-            OAuthController.check_existing_user(isVerified["user_id"], isVerified["user_email"], isVerified["user_token"])
-            req_data["success"] = True
-            return req_data
-    req_data["success"] = False
+    request_data = request.get_json()
+    if "id_token" in request_data:
+        is_verified = OAuthController.verify_token(request_data["id_token"])
+        if is_verified:
+            OAuthController.check_existing_user(is_verified["user_id"], is_verified["user_email"], is_verified["user_token"])
+            # Notifies client of successful User Authentication
+            request_data['success'] = True
+            return request_data
     return display_page("home", False)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     args["title"] = "Register"
-    args["registerForm"] = RegistrationForm()
-    if args["registerForm"].validate_on_submit():
-        name = args["registerForm"].username.data
-        if UserController.create_new_user("auto_gen", name, args["registerForm"].email.data, args["registerForm"].password.data, "Website"):
-            flash("Your account [" + name + "] has been created!", "success")
+    args["registration_form"] = RegistrationForm()
+    if args["registration_form"].validate_on_submit():
+        username = args["registration_form"].username.data
+        if UserController.create_new_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data, "Website"):
+            flash("Your account [" + username + "] has been created! Please login to continue.", "success")
+            return redirect(url_for("login"))
         else:
             flash("Account Creation Error. Please attempt to register again", "danger")
     return display_page("register", False)
+
 
 @app.route("/account")
 def account():
     args["title"] = "My Account"
     return display_page('account')
 
+
 @app.route('/logout')
 def logout():
     UserController.end_user_session()
     flash("You have been logged out!", 'info')
     return redirect(url_for('home'))
+
 
 if __name__ == "__main__":
     app.run()

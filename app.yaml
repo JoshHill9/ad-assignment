@@ -13,3 +13,8 @@ libraries:
   version: "0.12"
 - name: ssl
   version: latest
+
+  automatic_scaling:
+    max_concurrent_requests: 30
+    min_idle_instances: 0
+    max_pending_latency: 25ms

@@ -14,12 +14,7 @@ html, body {
     width: 80%;
     left: 10%;
   }
-
-/* Bootstrap Navigation Bar Collapse Point*/
-@media only screen and (max-width: 991px) {
-
-}
-
+  
 .alert {
   position: absolute;
   z-index: 10;

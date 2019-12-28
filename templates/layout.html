@@ -42,7 +42,7 @@
             var profile = gUser.getBasicProfile();
             var id_token = gUser.getAuthResponse().id_token;
 
-            // Prevent auto login (without clicking button)
+            // Prevent auto login to cached google account
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.disconnect();
 
@@ -57,7 +57,7 @@
                 if (req.status === 200 && response.success == true) {
                   window.location.href = "/account";
                 } else {
-                  console.log("Not done or failed");
+                  console.log("Login failed");
                 }
               }
             }

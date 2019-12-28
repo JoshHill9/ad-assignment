@@ -2,62 +2,62 @@
 
 {% block content %}
   <div class="container card mt-5 mb-5 p-3">
-    <form class="form-horizontal p-4" method="POST" action="/register">
-      {{ args["registerForm"].csrf_token }}
+    <form class="form-horizontal p-4" method="post" action="/register">
+      {{ args["registration_form"].csrf_token }}
       <legend class="border-bottom pb-1">Registration Form:</legend>
       <div class="form-group">
-        {{ args["registerForm"].email.label }}
-        {% if args["registerForm"].email.errors %}
-        {{ args["registerForm"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
+        {{ args["registration_form"].email.label }}
+        {% if args["registration_form"].email.errors %}
+        {{ args["registration_form"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
           <div class="invalid-feedback">
-            {% for error in args["registerForm"].email.errors %}
+            {% for error in args["registration_form"].email.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ args["registerForm"].email(class="form-control", placeholder="Enter your email...") }}
+          {{ args["registration_form"].email(class="form-control", placeholder="Enter your email...") }}
         {% endif %}
       </div>
       <div class="form-group">
-        {{ args["registerForm"].username.label }}
-        {% if args["registerForm"].username.errors %}
-        {{ args["registerForm"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
+        {{ args["registration_form"].username.label }}
+        {% if args["registration_form"].username.errors %}
+        {{ args["registration_form"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
           <div class="invalid-feedback">
-            {% for error in args["registerForm"].username.errors %}
+            {% for error in args["registration_form"].username.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ args["registerForm"].username(class="form-control", placeholder="Enter your username...") }}
+          {{ args["registration_form"].username(class="form-control", placeholder="Enter your username...") }}
         {% endif %}
       </div>
       <div class="form-group">
-        {{ args["registerForm"].password.label }}
-        {% if args["registerForm"].password.errors %}
-        {{ args["registerForm"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
+        {{ args["registration_form"].password.label }}
+        {% if args["registration_form"].password.errors %}
+        {{ args["registration_form"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
           <div class="invalid-feedback">
-            {% for error in args["registerForm"].password.errors %}
+            {% for error in args["registration_form"].password.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ args["registerForm"].password(class="form-control", placeholder="Enter your password...") }}
+          {{ args["registration_form"].password(class="form-control", placeholder="Enter your password...") }}
         {% endif %}
       </div>
       <div class="form-group">
-        {{ args["registerForm"].confirmPassword.label }}
-        {% if args["registerForm"].confirmPassword.errors %}
-        {{ args["registerForm"].confirmPassword(class="form-control is-invalid", placeholder="Confirm your password...") }}
+        {{ args["registration_form"].confirm_password.label }}
+        {% if args["registration_form"].confirm_password.errors %}
+        {{ args["registration_form"].confirm_password(class="form-control is-invalid", placeholder="Confirm your password...") }}
           <div class="invalid-feedback">
-            {% for error in args["registerForm"].confirmPassword.errors %}
+            {% for error in args["registration_form"].confirm_password.errors %}
               <span>{{ error }}</span>
             {% endfor %}
           </div>
         {% else %}
-          {{ args["registerForm"].confirmPassword(class="form-control", placeholder="Confirm your password...") }}
+          {{ args["registration_form"].confirm_password(class="form-control", placeholder="Confirm your password...") }}
         {% endif %}
       </div>
-      {{ args["registerForm"].submit(class="btn btn-dark") }}
+      {{ args["registration_form"].submit(class="btn btn-dark") }}
     </form>
     <span class="text-center">
       <strong>Already have an account?<strong>
