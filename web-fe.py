@@ -38,7 +38,7 @@ def home():
     args["title"] = "Film & TV Show Search | Home"
     args["search_form"] = SearchForm()
     if args["search_form"].validate_on_submit():
-        term = args["search_form"].search_term.data
+        term = args["search_form"].search_term.data.lower()
         country = args["search_form"].search_location.data
         # Check to see if the search has been performed recently and stored in Datastore
         saved_result = SearchResultController.get_search_result(term, country)
