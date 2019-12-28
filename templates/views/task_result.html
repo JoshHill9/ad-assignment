@@ -1,0 +1,12 @@
+{% if result %}
+  {% if result == "create_success" %}
+    <h1>Search Result Stored Successfully</h1>
+    <h2>Task Complete</h2>
+  {% elif result == "delete_success" %}
+    <h1>Search Result Deleted Successfully</h1>
+    <h2>Task Complete</h2>
+  {% elif result == "fail" %}
+    <h1>Search Result Storage/Deletion Failed</h1>
+    <h2>Task Incomplete</h2>
+  {% endif %}
+{% endif %}

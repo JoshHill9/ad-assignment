@@ -1,12 +1,14 @@
+service: task-be
 runtime: python27
 api_version: 1
 threadsafe: true
 
 handlers:
-- url: /static
-  static_dir: static
-- url: /.*
-  script: web-fe.app
+  - url: /create_task
+    script: search-be.app
+  - url: /_ah/queue/default
+    script: search-be.app
+    login: admin
 
 libraries:
 - name: flask

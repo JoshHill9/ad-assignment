@@ -6,7 +6,7 @@ sys.path.append('controllers')
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from forms import RegistrationForm, LoginForm, SearchForm
 
-import UserController, OAuthController, SearchService
+import UserController, OAuthController, SearchController
 import os
 
 app = Flask(__name__)
@@ -40,11 +40,22 @@ def home():
     if args["search_form"].validate_on_submit():
         term = args["search_form"].search_term.data
         country = args["search_form"].search_location.data
-        # Communicates with Utelly API to find search results
-        args["search_results"] = SearchService.perform_search(term, country)
+        saved_result = SearchController.get_search_result(term, country)
+        if saved_result:
+            if SearchController.check_result_expiry(term, country):
+                args["search_results"] = SearchController.perform_search(term, country)
+                args["search_date"] = "Just Now"
+                SearchController.queue_search_task({"term": term, "country": country, "expired": True})
+                SearchController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"])})
+            else:
+                args["search_results"] = SearchController.format_saved_result(saved_result.search_result)
+                args["search_date"] = saved_result.search_date
+        else:
+            args["search_results"] = SearchController.perform_search(term, country)
+            args["search_date"] = "Just Now"
+            SearchController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"])})
         return display_page("search_results")
     return display_page("home", False)
-
 
 @app.route("/about")
 def about():
