@@ -113,7 +113,7 @@
                   {% if session.get("user_type") == "website_user" %}
                     <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
                   {% elif session.get("user_type") == "google_user" %}
-                    <a href="{{ url_for('logout') }}" class="nav-link" onclick="signOut();"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link" onclick="signOut();"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
                   {% endif %}
                 </li>
               {% else %}
