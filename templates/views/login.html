@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="container card mt-5 mb-5 p-3">
+  <div class="container mt-5 mb-5 p-3">
     <div class="row">
-      <div class="col p-4 col-12">
-        <form class="form-horizontal" method="post" action="{{ url_for('login') }}">
+      <div class="card p-4 col-12">
+        <form method="post" action="{{ url_for('login') }}">
           {{ args["login_form"].csrf_token }}
           <legend class="border-bottom pb-1">FilmFinder Login:</legend>
           <div class="form-group">
@@ -35,17 +35,18 @@
           </div>
           {{ args["login_form"].login(class="btn btn-dark") }}
         </form>
-        <form class="form-horizontal">
-
-          <legend class="border-bottom mt-4">Automatically Register with Google:</legend>
-          <div class="g-signin2 mt-4" data-onsuccess="onSignIn"></div>
-
-        </form>
-      </div>
-      <div class="text-center col-12 mt-4 border-top p-3">
+    </div>
+  </div>
+  <div class="row">
+    <div class="card p-4 mt-2 col-6">
+      <legend class="border-bottom mt-4">Login with Google:</legend>
+      <div class="g-signin2 mt-4" data-onsuccess="onSignIn" data-longtitle="true" data-theme="dark"></div>
+    </div>
+    <div class="text-center col-6 mt-4 p-4">
+      <span class="align-middle">
         <strong>Don't want</strong> to sign in with <strong>Google</strong>?<br>
         <a href="{{ url_for('register') }}"><strong>Create a FilmFinder Account Here Instead!</strong></a>
-      </div>
+      </span>
     </div>
   </div>
 {% endblock content %}

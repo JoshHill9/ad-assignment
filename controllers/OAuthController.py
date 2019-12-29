@@ -11,21 +11,21 @@ def verify_token(provided_token):
             raise ValueError("Incorrect Token Issuer")
             return False
 
-        user_id = idinfo["sub"]
         user_email = idinfo["email"]
-        user_info = {"user_id": user_id, "user_email": user_email, "user_token": provided_token}
+        user_info = {"user_email": user_email, "user_token": provided_token}
         return user_info
     except ValueError:
         pass
     return False
 
+def generate_username(email):
+    username = email[0:email.find("@")]
+    return username
+
 # Looks up User in Datastore and automatically creates account if User is not found
 # Starts the User Session for new/existing User
-def check_existing_user(user_id, email, token):
+def check_existing_user(email, token):
     user = UserController.get_user(email=email)
-    if not user:
-        username = email[0:email.find("@")]
-        if UserController.create_user(user_id, username, email, token, "Google"):
-            UserController.start_user_session(username, "google_user")
-    else:
-        UserController.start_user_session(user.username, "google_user")
+    if user:
+        return {"username": user.username, "existing_user": True}
+    return {"username": generate_username(email), "existing_user": False}

@@ -28,9 +28,11 @@
           // Google Sign Out Method
           function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function() {
-              console.log('User signed out.');
-            });
+            if (auth2) {
+              auth2.signOut().then(function() {
+                console.log('User signed out.');
+              });
+            }
           }
 
           // Google Sign In Method
@@ -54,8 +56,12 @@
             req.onreadystatechange = function() {
               if (req.readyState === 4) {
                 var response = JSON.parse(req.responseText);
-                if (req.status === 200 && response.success == true) {
+                if (req.status === 200 && response.found_user == true) {
                   window.location.href = "/account";
+                } else if (req.status === 200 && response.found_user == false) {
+                  var email = response.email;
+                  var username = response.username;
+                  window.location.href = "/register?email=" + email + "&username=" + username;
                 } else {
                   console.log("Login failed");
                 }
@@ -110,11 +116,7 @@
                   <a href="{{ url_for('account') }}" class="nav-link"><i class="fas fa-store-alt fa-fw"></i> My Account [ {{ session["user"] }} ]</a>
                 </li>
                 <li class="nav-item">
-                  {% if session.get("user_type") == "website_user" %}
-                    <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
-                  {% elif session.get("user_type") == "google_user" %}
                     <a href="{{ url_for('logout') }}" class="nav-link" onclick="signOut();"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
-                  {% endif %}
                 </li>
               {% else %}
                 {% if args.get("active") == "register" %}

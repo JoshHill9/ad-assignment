@@ -16,19 +16,23 @@ def get_user(user_id=None, username=None, email=None):
     elif email:
         return User.get_by_email(email)
 
-def hash_user_pwd(pwd):
+def hash_pwd(pwd):
     new_pwd = bcrypt.hashpw(pwd, bcrypt.gensalt(6))
     pwd = None
     return new_pwd
 
-def check_user_pwd(username, pwd):
+def validate_pwd(username, pwd):
     user = get_user(username=username)
     if user:
-        hash_pwd = bcrypt.hashpw(pwd, user.password)
-        if hash_pwd == user.password:
+        match_hash = bcrypt.hashpw(pwd, user.password)
+        if match_hash == user.password:
             pwd=None
             return True
     return False
+
+def reset_pwd(username, new_pwd):
+    hashed_pwd = hash_pwd(new_pwd)
+    return User.reset_pwd(username, hashed_pwd)
 
 def generate_user_id(username):
     user_id = username + str(random.randint(0,1000))
@@ -36,19 +40,19 @@ def generate_user_id(username):
         user_id = username + str(random.randint(0,1000))
     return user_id
 
-def create_user(user_id, username, email, pwd, joined_from):
+def create_user(user_id, username, email, pwd):
     # Automatically generates Username for Google Users based on Google Email
     if user_id == "auto_gen":
         user_id = generate_user_id(username)
 
-    hashed_pwd = hash_user_pwd(pwd)
-    user = User.create(user_id, username, email, hashed_pwd, joined_from)
+    hashed_pwd = hash_pwd(pwd)
+    user = User.create(user_id, username, email, hashed_pwd)
     return user
 
 # SESSION CONTROL METHODS
-def start_user_session(username, user_type="website_user"):
+def start_user_session(username):
+    user = get_user(username=username)
     session["user"] = username
-    session["user_type"] = user_type
     session["start_time"] = datetime.now()
     session["refresh_time"] = session["start_time"] + timedelta(minutes=45)
 
