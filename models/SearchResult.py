@@ -17,7 +17,7 @@ def delete(term, location):
     key = term + location
     search_result = ndb.Key("SearchResult", key)
     if search_result:
-        search_result.delete()
+        return search_result.delete()
 
 def is_expired(term, location):
     search_result = get(term, location)
