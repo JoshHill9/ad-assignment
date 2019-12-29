@@ -4,7 +4,7 @@ sys.path.append('models')
 sys.path.append('controllers')
 
 from flask import Flask, render_template, redirect, request, flash, url_for, session
-from forms import RegistrationForm, LoginForm, SearchForm
+from forms import RegistrationForm, LoginForm, SearchForm, PasswordResetForm
 
 import UserController, OAuthController, SearchResultController, SearchValidatorController
 import os
@@ -79,7 +79,7 @@ def login():
     if args["login_form"].validate_on_submit():
         username = args["login_form"].username.data
         pwd = args["login_form"].password.data
-        if UserController.check_user_pwd(username, pwd):
+        if UserController.validate_pwd(username, pwd):
             pwd = None
             UserController.start_user_session(username)
             flash("Successfully logged in as " + username + "!", 'success')
@@ -95,9 +95,15 @@ def google_login():
     if "id_token" in request_data:
         is_verified = OAuthController.verify_token(request_data["id_token"])
         if is_verified:
-            OAuthController.check_existing_user(is_verified["user_id"], is_verified["user_email"], is_verified["user_token"])
-            # Notifies client of successful User Authentication
-            request_data['success'] = True
+            user_details = OAuthController.check_existing_user(is_verified["user_email"], is_verified["user_token"])
+            if user_details["existing_user"]:
+                UserController.start_user_session(user_details["username"])
+                # Notifies client of successful User Authentication
+                request_data["found_user"] = True
+                return request_data
+            request_data["found_user"] = False
+            request_data["email"] = is_verified["user_email"]
+            request_data["username"] = user_details["username"]
             return request_data
     return display_page("home", False)
 
@@ -106,9 +112,14 @@ def google_login():
 def register():
     args["title"] = "Register"
     args["registration_form"] = RegistrationForm()
+    if request.method == "GET":
+        if request.args.get("email") and request.args.get("username"):
+            flash("This google account has not been registered before. Please create a password to continue.", "info")
+            args["registration_form"].email.data = request.args["email"]
+            args["registration_form"].username.data = request.args["username"]
     if args["registration_form"].validate_on_submit():
         username = args["registration_form"].username.data
-        if UserController.create_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data, "Website"):
+        if UserController.create_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data):
             flash("Your account [" + username + "] has been created! Please login to continue.", "success")
             return redirect(url_for("login"))
         else:
@@ -116,9 +127,25 @@ def register():
     return display_page("register", False)
 
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 def account():
     args["title"] = "My Account"
+    args["reset_form"] = PasswordResetForm()
+    if args["reset_form"].validate_on_submit():
+        username = session["user"]
+        old_pwd = args["reset_form"].old_password.data
+        if UserController.validate_pwd(username, old_pwd):
+            new_pwd = args["reset_form"].new_password.data
+            if UserController.reset_pwd(username, new_pwd):
+                flash("Your password has been changed Successfully! Please login again to continue.", "success")
+                UserController.end_user_session()
+                return redirect(url_for("login"))
+            new_pwd = None
+            flash("An error occurred while resetting your password! Please try again.", "danger")
+            return redirect(url_for("account"))
+        old_pwd = None
+        flash("Your old password does not match our records. Please try again.", "danger")
+        return redirect(url_for("account"))
     return display_page('account')
 
 

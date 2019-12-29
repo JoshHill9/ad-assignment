@@ -2,7 +2,51 @@
 
 {% block content %}
   <div class="container mt-5">
-      <h3>Hi {% if session["user_type"] == "google_user" %}[Google User] {% endif %}{{ session["user"] }}!</h3>
-      <h3>Welcome to your account page.</h3>
+      <h3>Hi {{ session["user"] }}!</h3>
+      <h3 class="pb-2">Welcome to your account page.</h3>
+      <form class="form-horizontal p-4 card" method="post" action="/account">
+        {{ args["reset_form"].csrf_token }}
+        <legend class="border-bottom pb-1">Password Reset Form:</legend>
+        <div class="form-group">
+          {{ args["reset_form"].old_password.label }}
+          {% if args["reset_form"].old_password.errors %}
+            {{ args["reset_form"].old_password(class="form-control is-invalid", placeholder="Enter your old password...") }}
+            <div class="invalid-feedback">
+              {% for error in args["reset_form"].old_password.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ args["reset_form"].old_password(class="form-control", placeholder="Enter your old password...") }}
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{ args["reset_form"].new_password.label }}
+          {% if args["reset_form"].new_password.errors %}
+            {{ args["reset_form"].new_password(class="form-control is-invalid", placeholder="Enter your new password...") }}
+            <div class="invalid-feedback">
+              {% for error in args["reset_form"].new_password.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ args["reset_form"].new_password(class="form-control", placeholder="Enter your new password...") }}
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{ args["reset_form"].confirm_new_password.label }}
+          {% if args["reset_form"].confirm_new_password.errors %}
+            {{ args["reset_form"].confirm_new_password(class="form-control is-invalid", placeholder="Confirm your new password...") }}
+            <div class="invalid-feedback">
+              {% for error in args["reset_form"].confirm_new_password.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ args["reset_form"].confirm_new_password(class="form-control", placeholder="Confirm your new password...") }}
+          {% endif %}
+        </div>
+        {{ args["reset_form"].reset(class="btn btn-dark") }}
+      </form>
   </div>
 {% endblock content %}

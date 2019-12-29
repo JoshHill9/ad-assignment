@@ -1,67 +1,78 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div class="container card mt-5 mb-5 p-3">
-    <form class="form-horizontal p-4" method="post" action="/register">
-      {{ args["registration_form"].csrf_token }}
-      <legend class="border-bottom pb-1">Registration Form:</legend>
-      <div class="form-group">
-        {{ args["registration_form"].email.label }}
-        {% if args["registration_form"].email.errors %}
-        {{ args["registration_form"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
-          <div class="invalid-feedback">
-            {% for error in args["registration_form"].email.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+  <div class="container mt-5 mb-5 p-3">
+    <div class="row">
+      <div class="card p-4 col-12">
+        <form method="post" action="/register">
+          {{ args["registration_form"].csrf_token }}
+          <legend class="border-bottom pb-1">Registration Form:</legend>
+          <div class="form-group">
+            {{ args["registration_form"].email.label }}
+            {% if args["registration_form"].email.errors %}
+              {{ args["registration_form"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
+              <div class="invalid-feedback">
+                {% for error in args["registration_form"].email.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ args["registration_form"].email(class="form-control", placeholder="Enter your email...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["registration_form"].email(class="form-control", placeholder="Enter your email...") }}
-        {% endif %}
-      </div>
-      <div class="form-group">
-        {{ args["registration_form"].username.label }}
-        {% if args["registration_form"].username.errors %}
-        {{ args["registration_form"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
-          <div class="invalid-feedback">
-            {% for error in args["registration_form"].username.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+          <div class="form-group">
+            {{ args["registration_form"].username.label }}
+            {% if args["registration_form"].username.errors %}
+              {{ args["registration_form"].username(class="form-control is-invalid", placeholder="Enter your username...") }}
+              <div class="invalid-feedback">
+                {% for error in args["registration_form"].username.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ args["registration_form"].username(class="form-control", placeholder="Enter your username...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["registration_form"].username(class="form-control", placeholder="Enter your username...") }}
-        {% endif %}
-      </div>
-      <div class="form-group">
-        {{ args["registration_form"].password.label }}
-        {% if args["registration_form"].password.errors %}
-        {{ args["registration_form"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
-          <div class="invalid-feedback">
-            {% for error in args["registration_form"].password.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+          <div class="form-group">
+            {{ args["registration_form"].password.label }}
+            {% if args["registration_form"].password.errors %}
+              {{ args["registration_form"].password(class="form-control is-invalid", placeholder="Enter your password...") }}
+              <div class="invalid-feedback">
+                {% for error in args["registration_form"].password.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ args["registration_form"].password(class="form-control", placeholder="Enter your password...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["registration_form"].password(class="form-control", placeholder="Enter your password...") }}
-        {% endif %}
-      </div>
-      <div class="form-group">
-        {{ args["registration_form"].confirm_password.label }}
-        {% if args["registration_form"].confirm_password.errors %}
-        {{ args["registration_form"].confirm_password(class="form-control is-invalid", placeholder="Confirm your password...") }}
-          <div class="invalid-feedback">
-            {% for error in args["registration_form"].confirm_password.errors %}
-              <span>{{ error }}</span>
-            {% endfor %}
+          <div class="form-group">
+            {{ args["registration_form"].confirm_password.label }}
+            {% if args["registration_form"].confirm_password.errors %}
+              {{ args["registration_form"].confirm_password(class="form-control is-invalid", placeholder="Confirm your password...") }}
+              <div class="invalid-feedback">
+                {% for error in args["registration_form"].confirm_password.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              {{ args["registration_form"].confirm_password(class="form-control", placeholder="Confirm your password...") }}
+            {% endif %}
           </div>
-        {% else %}
-          {{ args["registration_form"].confirm_password(class="form-control", placeholder="Confirm your password...") }}
-        {% endif %}
+          {{ args["registration_form"].submit(class="btn btn-dark") }}
+        </form>
       </div>
-      {{ args["registration_form"].submit(class="btn btn-dark") }}
-    </form>
-    <span class="text-center">
-      <strong>Already have an account?<strong>
-      <a href="{{ url_for('login') }}">Login Here!</a>
-    </span>
-  </div>
+    </div>
+    <div class="row">
+      <div class="card p-4 mt-2 col-6">
+        <legend class="border-bottom mt-4">Register with Google:</legend>
+        <div class="g-signin2 mt-4" data-onsuccess="onSignIn" data-theme="dark"></div>
+      </div>
+      <div class="text-center col-6 mt-4 p-4">
+        <span class="text-center">
+          <strong>Already have an account?<strong><br>
+          <a href="{{ url_for('login') }}">Login Here!</a>
+        </span>
+      </div>
+    </div>
 {% endblock content %}

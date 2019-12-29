@@ -56,4 +56,4 @@ def perform_search(search_term, search_location):
                     if str_length > 0:
                         non_url_locations = non_url_locations[0:str_length-2] + "."
                         result["non_url_locations"] = non_url_locations
-    return api_response
+    return api_response["results"]

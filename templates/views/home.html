@@ -8,36 +8,28 @@
     <p class="text-center bg-dark">Please note that only UK and US search services are available.</p>
   </div>
   <div class="container-flex m-2 mt-5">
-    <form class="form-horizontal" action="{{ url_for('home') }}" method="POST">
-      <div class="form-row">
-        {{ args["search_form"].csrf_token }}
-        <div class="col col-8">
-          {{ args["search_form"].search_term.label }}:
-          {% if session.get("user") %}
+    {% if session.get("user") %}
+      <form class="form-horizontal" action="{{ url_for('home') }}" method="POST">
+        <div class="form-row">
+          {{ args["search_form"].csrf_token }}
+          <div class="col col-8">
+            {{ args["search_form"].search_term.label }}:
             {{ args["search_form"].search_term(class="form-control", placeholder="Search Movie / TV Show by name") }}
-          {% else %}
-            {{ args["search_form"].search_term(class="form-control", placeholder="Please login / register to search...", disabled=True) }}
-          {% endif %}
-        </div>
-        <div class="col col-4">
-          {{ args["search_form"].search_location.label }}:
-          {% if session.get("user") %}
+          </div>
+          <div class="col col-4">
+            {{ args["search_form"].search_location.label }}:
             {{ args["search_form"].search_location(class="form-control") }}
-          {% else %}
-            {{ args["search_form"].search_location(class="form-control", disabled=True) }}
-          {% endif %}
+          </div>
         </div>
-      </div>
-      <div class="form-row mt-3">
-        <div class="col col-1">
-          {% if session.get("user") %}
+        <div class="form-row mt-3">
+          <div class="col col-1">
             {{ args["search_form"].search(class="btn btn-dark") }}
-          {% else %}
-            {{ args["search_form"].search(class="btn btn-dark", disabled=True) }}
-          {% endif %}
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    {% else %}
+      <h3 class="text-center">Please <a href="{{ url_for('login') }}">login</a> / <a href="{{ url_for('register') }}">register</a> to begin searching.</h3>
+    {% endif %}
   </div>
   </div>
 {% endblock content %}

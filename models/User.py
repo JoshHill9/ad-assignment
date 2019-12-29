@@ -6,8 +6,7 @@ class User(ndb.Model):
     username = ndb.StringProperty()
     email = ndb.StringProperty()
     password = ndb.StringProperty()
-    join_date = ndb.DateProperty(auto_now_add=True)
-    joined_from = ndb.StringProperty()
+    join_date = ndb.DateTimeProperty(auto_now_add=True)
 
 def get_by_id(user_id):
     user_key = ndb.Key("User", user_id)
@@ -21,15 +20,25 @@ def get_by_email(email):
     query = User.query().filter(User.email == email)
     return query.get()
 
+def reset_pwd(username, new_pwd):
+    user = get_by_username(username)
+    if user:
+        user.password = new_pwd
+    try:
+        user.put()
+        return True
+    except ValuError:
+        pass
+    return False
+
 # Returns User Entity initialised with the Entity Key set to the User ID
-def create(user_id, username, email, pwd, joined_from):
+def create(user_id, username, email, pwd):
     if user_id:
         user = User(id=user_id)
         user.user_id = user_id
         user.username = username
         user.email = email
         user.password = pwd
-        user.joined_from = joined_from
         try:
             user.put()
             return True

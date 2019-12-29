@@ -23,8 +23,8 @@ def is_expired(term, location):
     search_result = get(term, location)
     if search_result:
         if datetime.now() >= search_result.result_expiry:
-            return "Expired"
-    return None
+            return True
+    return False
 
 def create(term, location, result):
     key = term + location
