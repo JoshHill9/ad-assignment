@@ -16,6 +16,7 @@ def get_user(user_id=None, username=None, email=None):
     elif email:
         return User.get_by_email(email)
 
+# Pwd encryption and validation methods
 def hash_pwd(pwd):
     new_pwd = bcrypt.hashpw(pwd, bcrypt.gensalt(6))
     pwd = None

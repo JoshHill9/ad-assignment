@@ -3,6 +3,11 @@ from google.auth.transport import requests
 
 import UserController
 
+# Controller for authenticating users with OAuth2.0 Google Login
+# Google Users are automatically added to the Datastore (see /google_login web-fe.py)
+# A username must be auto generated for this, hence the generate_username method
+# Google User passwords are not saved or input into the web application
+
 def verify_token(provided_token):
     try:
         idinfo = id_token.verify_oauth2_token(provided_token, requests.Request(), "701326295753-m574k0r1pur17bvoj63c5cqtkn72gqj2.apps.googleusercontent.com")
@@ -11,8 +16,9 @@ def verify_token(provided_token):
             raise ValueError("Incorrect Token Issuer")
             return False
 
+        user_id = idinfo["sub"]
         user_email = idinfo["email"]
-        user_info = {"user_email": user_email, "user_token": provided_token}
+        user_info = {"user_email": user_email, "user_token": provided_token, "user_id": user_id}
         return user_info
     except ValueError:
         pass

@@ -7,6 +7,8 @@
       <form class="form-horizontal p-4 card" method="post" action="/account">
         {{ args["reset_form"].csrf_token }}
         <legend class="border-bottom pb-1">Password Reset Form:</legend>
+        <p><strong>Note:</strong> This is <strong>not possible</strong> as a Google User.</p>
+        <p>Please modify your password using <a href="https://support.google.com/accounts/answer/41078?co=GENIE.Platform%3DDesktop&hl=en">Official Google Sites</a> instead.</p>
         <div class="form-group">
           {{ args["reset_form"].old_password.label }}
           {% if args["reset_form"].old_password.errors %}

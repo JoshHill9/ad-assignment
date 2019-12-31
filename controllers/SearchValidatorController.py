@@ -3,6 +3,10 @@ sys.path.append("models")
 
 import SearchValidator
 
+# SearchValidatorController used by web-fe.py and search-be.py
+# This allows each Service to securely communicate with each other and prevent malicious
+# tasks from being submitted to the search-be.py taskqueue.
+
 def get_validator(term, location):
     return SearchValidator.get(term, location)
 
