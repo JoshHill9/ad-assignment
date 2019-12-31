@@ -14,11 +14,15 @@ def create_task():
         term = request.form["term"]
         country = request.form["country"]
         if "csrf" in request.form:
+            # Validates request source is from web-fe.py Search Form
             if SearchValidatorController.validate_token(term, country, request.form["csrf"]):
                 if "result" in request.form:
+                    # Queues Task to store Search Result data in Datastore
                     taskqueue.add(params={"term": request.form["term"], "country": request.form["country"], "result": request.form["result"]})
                 elif "expired" in request.form:
-                    taskqueue.add(params={"term": request.form["term"], "country": request.form["country"], "expired": True})
+                    # Queues Task to delete expired Search Result data and re-store updated data
+                    taskqueue.add(params={"term": request.form["term"], "country": request.form["country"], "expired": True, "new_result": request.form["new_result"]})
+                # Removes validator Entity from Datastore for security reasons
                 SearchValidatorController.delete_validator(term, country)
                 return render_template("views/task_result.html", result="form_validated")
             return render_template("views/task_result.html", result="form_invalid")
@@ -33,6 +37,7 @@ def task_handler():
                 return render_template("views/task_result.html", result="create_success")
         elif "expired" in request.form:
             search_result = SearchResultController.delete_search_result(request.form["term"], request.form["country"])
+            new_result = SearchResultController.create_search_result(request.form["term"], request.form["country"], request.form["new_result"])
             return render_template("views/task_result.html", result="delete_success")
     return render_template("views/task_result.html", result="fail")
 

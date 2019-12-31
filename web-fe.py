@@ -15,7 +15,7 @@ app.config["SECRET_KEY"] = os.urandom(24)
 args = {}
 
 # Renders page view and sets active page in navigation bar.
-# Prevents access to pages that require login_form
+# Prevents access to pages that require the user to be logged in
 # Notifies User of end of Session
 def display_page(page_name = "home", login_required = True):
     args["active"] = page_name
@@ -37,6 +37,10 @@ def display_page(page_name = "home", login_required = True):
 def home():
     args["title"] = "Film & TV Show Search | Home"
     args["search_form"] = SearchForm()
+    # Notifies User of auto account creation from Google Login
+    if request.method == "GET":
+        if request.args.get("username") and request.args.get("new_user"):
+            flash("Welcome " + request.args["username"] + "! Your google account has now been registered.", "success")
     if args["search_form"].validate_on_submit():
         term = args["search_form"].search_term.data.lower()
         country = args["search_form"].search_location.data
@@ -51,9 +55,7 @@ def home():
                 args["search_date"] = "Just Now"
                 SearchValidatorController.create_validator(term, country, csrf_token)
                 # Queues a task on task-be module to delete expired Datastore search result
-                SearchResultController.queue_search_task({"term": term, "country": country, "expired": True, "csrf": csrf_token})
-                # Queues a task on task-be module to save new search result from Utelly API
-                SearchResultController.queue_search_task({"term": term, "country": country, "result": str(args["search_results"]), "csrf": csrf_token})
+                SearchResultController.queue_search_task({"term": term, "country": country, "expired": True, "new_result": str(args["search_results"]), "csrf": csrf_token})
             else:
                 # Formats stored result from String to List type for correct displaying
                 args["search_results"] = SearchResultController.format_saved_result(saved_result.search_result)
@@ -71,7 +73,6 @@ def about():
     args["title"] = "About"
     return display_page("about", False)
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     args["title"] = "Login"
@@ -83,7 +84,7 @@ def login():
             pwd = None
             UserController.start_user_session(username)
             flash("Successfully logged in as " + username + "!", 'success')
-            return redirect(url_for('account'))
+            return redirect(url_for('home'))
         flash("Sorry, the login information provided was not correct", 'danger')
     return display_page("login", False)
 
@@ -101,8 +102,10 @@ def google_login():
                 # Notifies client of successful User Authentication
                 request_data["found_user"] = True
                 return request_data
+            # Auto creates User account from minimal Google information
+            UserController.create_user(is_verified["user_id"], user_details["username"], is_verified["user_email"], is_verified["user_token"])
+            UserController.start_user_session(user_details["username"])
             request_data["found_user"] = False
-            request_data["email"] = is_verified["user_email"]
             request_data["username"] = user_details["username"]
             return request_data
     return display_page("home", False)
@@ -112,11 +115,6 @@ def google_login():
 def register():
     args["title"] = "Register"
     args["registration_form"] = RegistrationForm()
-    if request.method == "GET":
-        if request.args.get("email") and request.args.get("username"):
-            flash("This google account has not been registered before. Please create a password to continue.", "info")
-            args["registration_form"].email.data = request.args["email"]
-            args["registration_form"].username.data = request.args["username"]
     if args["registration_form"].validate_on_submit():
         username = args["registration_form"].username.data
         if UserController.create_user("auto_gen", username, args["registration_form"].email.data, args["registration_form"].password.data):
@@ -154,7 +152,6 @@ def logout():
     UserController.end_user_session()
     flash("You have been logged out!", 'info')
     return redirect(url_for('home'))
-
 
 if __name__ == "__main__":
     app.run()

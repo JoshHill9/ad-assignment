@@ -1,6 +1,10 @@
 from google.appengine.ext import ndb
 from flask import redirect
 
+# Model Class for 'User'
+# Allows for creation and retrieval of User's from the Datastore
+# A password reset functionality is also included.
+
 class User(ndb.Model):
     user_id = ndb.StringProperty()
     username = ndb.StringProperty()

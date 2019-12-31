@@ -4,6 +4,7 @@
   <div class="container mt-5 mb-5 p-3">
     <div class="row">
       <div class="card p-4 col-12">
+        <!-- Form loading using Flask WTForms -->
         <form method="post" action="/register">
           {{ args["registration_form"].csrf_token }}
           <legend class="border-bottom pb-1">Registration Form:</legend>
@@ -12,6 +13,7 @@
             {% if args["registration_form"].email.errors %}
               {{ args["registration_form"].email(class="form-control is-invalid", placeholder="Enter your email...") }}
               <div class="invalid-feedback">
+                <!-- Displays error messages upon submission of an invalid form (see validate_on_submit() method used in web-fe.py) -->
                 {% for error in args["registration_form"].email.errors %}
                   <span>{{ error }}</span>
                 {% endfor %}

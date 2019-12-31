@@ -1,6 +1,10 @@
 from google.appengine.ext import ndb
 from datetime import datetime, timedelta
 
+# Model Class for 'SearchResult'
+# SearchResult's are stored in the Datastore for 1 day after a User performs a search
+# This enables quicker loading of search results and less calls to the Utelly API
+
 class SearchResult(ndb.Model):
     search_term = ndb.StringProperty()
     search_location = ndb.StringProperty()

@@ -57,11 +57,10 @@
               if (req.readyState === 4) {
                 var response = JSON.parse(req.responseText);
                 if (req.status === 200 && response.found_user == true) {
-                  window.location.href = "/account";
+                  window.location.href = "/";
                 } else if (req.status === 200 && response.found_user == false) {
-                  var email = response.email;
                   var username = response.username;
-                  window.location.href = "/register?email=" + email + "&username=" + username;
+                  window.location.href = "/?username=" + username + "&new_user=true";
                 } else {
                   console.log("Login failed");
                 }
@@ -142,6 +141,7 @@
           </button>
         </nav>
 
+        <!-- Allows for rendering of Bootstrap Flash messages by passing message and category into flash() method from python file -->
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
@@ -150,6 +150,7 @@
                <div class="col col-4">
                  <div class="alert alert-{{ category }} alert-dismissible fade show container text-center mt-3" role="alert">
                    {{ message }}
+                   <!-- Implements Close (X) button to hide Flash Messages -->
                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                  </div>
                </div>
@@ -159,6 +160,8 @@
           {% endif %}
         {% endwith %}
 
+        <!-- All 'views' are loaded into this section. -->
+        <!-- Navbar will now be included on every page -->
         {% block content %}{% endblock content %}
 
     </body>
